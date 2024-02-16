@@ -1,6 +1,5 @@
 from flask import Flask, render_template,jsonify,request,send_file
 from flask_cors import CORS
-
 import pandas as pd
 import numpy as np
 import csv
@@ -14,6 +13,9 @@ CORS(app)
 import os
 
 
+@app.route('/upload', methods=['POST'])
+def check():
+    return jsonify('working')
 
 @app.route('/upload', methods=['POST'])
 def create_and_save_excel():
