@@ -229,17 +229,20 @@ def create_and_save_excel():
 
 
     # Columns Extraction
+            
+    try:
+        df['Type'] = df[f"{column}"].apply(find_drink_types).astype(str)
+        df['Brand'] = df[f"{column}"].apply(find_brands).astype(str)
+        df['Number in case'] = df[f"{column}"].apply(extract_number)
+        df['Size'] = df[f"{column}"].apply(find_volume_size).astype(str)
+        df['Package Size'] = df[f"{column}"].apply(find_package_size).astype(str)
 
-    df['Type'] = df[f"{column}"].apply(find_drink_types).astype(str)
-    df['Brand'] = df[f"{column}"].apply(find_brands).astype(str)
-    df['Number in case'] = df[f"{column}"].apply(extract_number)
-    df['Size'] = df[f"{column}"].apply(find_volume_size).astype(str)
-    df['Package Size'] = df[f"{column}"].apply(find_package_size).astype(str)
 
+        df.to_excel('static/output.xlsx', index=False)
 
-    df.to_excel('static/output.xlsx', index=False)
-
-    return jsonify('done')
+        return jsonify('done')
+    except:
+        return jsonify("column doesn't exist")
 
 
 
