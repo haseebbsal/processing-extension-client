@@ -13,7 +13,7 @@ CORS(app)
 import os
 
 
-@app.route('/upload', methods=['POST'])
+@app.route('/get', methods=['GET'])
 def check():
     return jsonify('working')
 
