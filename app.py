@@ -19,6 +19,26 @@ def check():
 
 @app.route('/upload', methods=['POST'])
 def create_and_save_excel():
+    try:
+        brand_file=request.files['brand-file']
+    except:
+        brand_file=None
+    try:
+        drink_file=request.files['drink-file']
+    except:
+        drink_file=None
+    if drink_file != None:
+        drink_file_path = 'static/drink_types.csv'
+        if os.path.exists(drink_file_path):
+            os.remove(drink_file_path)
+        drink_file.save(drink_file_path)
+    if brand_file != None:
+        brand_file_path = 'static/brands.csv'
+        if os.path.exists(brand_file_path):
+            os.remove(brand_file_path)
+        brand_file.save(brand_file_path)
+
+
 
     column = request.form['column']
     file = request.files['file']
