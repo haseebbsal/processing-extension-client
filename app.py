@@ -5,12 +5,13 @@ import pandas as pd
 import numpy as np
 import csv
 import re
-import os
+
+from io import BytesIO
 
 app = Flask(__name__)
 
 CORS(app)
-
+import os
 
 
 
@@ -27,10 +28,6 @@ def create_and_save_excel():
     os.remove(file_path)
 
     # Funtion for Number in Case
-    # df = pd.read_csv('input.csv')
-
-
-    # Funtion for Number in Case
     def extract_number(description):
         match = re.search(r'(\d+)-', description)
         if match:
@@ -45,11 +42,11 @@ def create_and_save_excel():
         return None  
 
 
+    
     # Function For Brand
     def find_brands(description):
         brands_list = ''
         csv_file_path = 'static/brands.csv'
-        
         with open(csv_file_path, newline='', encoding='iso-8859-1') as csvfile:
             reader = csv.reader(csvfile)
             for row in reader:
@@ -104,8 +101,6 @@ def create_and_save_excel():
                     break
         
         return found_type
-
-
 
     # Function for Package Size
     def find_package_size(description):
@@ -169,7 +164,6 @@ def create_and_save_excel():
 
 
 
-
     # Function for Size
     def find_volume_size(description):
         # Define regular expression patterns to match different size formats
@@ -211,6 +205,7 @@ def create_and_save_excel():
             else:
                 return ''  
 
+
     # Columns Extraction
 
     df['Type'] = df[f"{column}"].apply(find_drink_types).astype(str)
@@ -220,17 +215,7 @@ def create_and_save_excel():
     df['Package Size'] = df[f"{column}"].apply(find_package_size).astype(str)
 
 
-    df.to_excel('static/output.xlsx',index=False)
-    print('Done Extracting..............')
-
-    # df['Type'] = df[f"{column}"].apply(find_drink_types).astype(str)
-    # df['Brand'] = df[f"{column}"].apply(find_brands).astype(str)
-    # df['Number in case'] = df[f"{column}"].apply(extract_number)
-    # df['Size'] = df[f"{column}"].apply(find_volume_size).astype(str)
-    # df['Package Size'] = df[f"{column}"].apply(find_package_size).astype(str)
-
-
-    # df.to_csv('static/output.csv',index=False)
+    df.to_excel('static/output.xlsx', index=False)
 
     return jsonify('done')
 
