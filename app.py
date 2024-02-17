@@ -234,7 +234,7 @@ def create_and_save_excel():
         # Columns Extraction
                 
     try:
-        type_array= list(df['Item Description Line 1'])
+        type_array= list(df[f"{column}"])
         # brand_type=list(df['Brand'])
         # number_type=list(df['Number in case'])
         # size_type=list(df['Size'])
