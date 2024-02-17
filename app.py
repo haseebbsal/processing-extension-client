@@ -258,7 +258,7 @@ def create_and_save_excel():
         df['Package Size'] = new_package_size
 
 
-        df.to_csv('output.csv', index=False)
+        df.to_excel('static/output.xlsx', index=False)
         print('done')
 
         return jsonify('done')
@@ -270,7 +270,7 @@ def create_and_save_excel():
 
 @app.route("/download",methods=['GET'])
 def index():
-    file_path = 'static/output.csv'
+    file_path = 'static/output.xlsx'
 
     if os.path.exists(file_path):
         return send_file(
