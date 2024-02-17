@@ -231,11 +231,28 @@ def create_and_save_excel():
     # Columns Extraction
             
     try:
-        df['Type'] = df[f"{column}"].apply(find_drink_types).astype(str)
-        df['Brand'] = df[f"{column}"].apply(find_brands).astype(str)
-        df['Number in case'] = df[f"{column}"].apply(extract_number)
-        df['Size'] = df[f"{column}"].apply(find_volume_size).astype(str)
-        df['Package Size'] = df[f"{column}"].apply(find_package_size).astype(str)
+        type_array= list(df[f"{column}"])
+        # brand_type=list(df['Brand'])
+        # number_type=list(df['Number in case'])
+        # size_type=list(df['Size'])
+        # package_size=list(df['Package Size'])
+        new_type_array= []
+        new_brand_type=[]
+        new_number_type=[]
+        new_size_type=[]
+        new_package_size=[]
+        for i in range(len(type_array)):
+            new_type_array.append(str(find_drink_types(type_array[i])))
+            new_brand_type.append(str(find_brands(type_array[i])))
+            new_number_type.append(str(extract_number(type_array[i])))
+            new_size_type.append(str(find_volume_size(type_array[i])))
+            new_package_size.append(str(find_package_size(type_array[i])))
+
+        df['Type'] = new_type_array
+        df['Brand'] = new_brand_type
+        df['Number in case'] = new_number_type
+        df['Size'] = new_size_type
+        df['Package Size'] = new_package_size
 
 
         df.to_csv('static/output.csv', index=False)
