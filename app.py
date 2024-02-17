@@ -49,6 +49,22 @@ def create_and_save_excel():
     df = pd.read_csv(f"static/{filename}")
     os.remove(file_path)
 
+    drink_types_csv = 'static/drink_types.csv'
+
+    drink_types_lower = set()
+    with open(drink_types_csv, newline='', encoding='iso-8859-1') as csvfile:
+        reader = csv.reader(csvfile)
+        for row in reader:
+            drink_types_lower.add(row[0].lower())
+
+    brand_name_list=[]
+    csv_file_path = 'static/brands.csv'
+    with open(csv_file_path, newline='', encoding='iso-8859-1') as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader:
+                brand_name_list.append(row[0].lower())  
+
+
     # Funtion for Number in Case
     def extract_number(description):
         match = re.search(r'(\d+)-', description)
@@ -64,18 +80,14 @@ def create_and_save_excel():
         return None  
 
 
-    
+
     # Function For Brand
     def find_brands(description):
         brands_list = ''
-        csv_file_path = 'static/brands.csv'
-        with open(csv_file_path, newline='', encoding='iso-8859-1') as csvfile:
-            reader = csv.reader(csvfile)
-            for row in reader:
-                brand_name = row[0].lower()  
-                if brand_name in description.lower():
-                    brands_list+=(str(brand_name.upper()))
-                    break 
+        for brand_name in brand_name_list:
+            if brand_name in description.lower():
+                brands_list+=(str(brand_name.upper()))
+                break 
         
         return brands_list
 
@@ -84,15 +96,6 @@ def create_and_save_excel():
     def find_drink_types(description):
         found_type = None
         description_lower = description.lower()
-
-        drink_types_csv = 'static/drink_types.csv'
-
-        drink_types_lower = set()
-        with open(drink_types_csv, newline='', encoding='iso-8859-1') as csvfile:
-            reader = csv.reader(csvfile)
-            for row in reader:
-                drink_types_lower.add(row[0].lower())
-
         for drink in drink_types_lower:
             if drink in description_lower:
                 found_type = drink.upper()
@@ -228,10 +231,10 @@ def create_and_save_excel():
                 return ''  
 
 
-    # Columns Extraction
-            
+        # Columns Extraction
+                
     try:
-        type_array= list(df[f"{column}"])
+        type_array= list(df['Item Description Line 1'])
         # brand_type=list(df['Brand'])
         # number_type=list(df['Number in case'])
         # size_type=list(df['Size'])
@@ -255,7 +258,8 @@ def create_and_save_excel():
         df['Package Size'] = new_package_size
 
 
-        df.to_csv('static/output.csv', index=False)
+        df.to_csv('output.csv', index=False)
+        print('done')
 
         return jsonify('done')
     except:
