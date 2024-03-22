@@ -24,6 +24,7 @@ def create_and_save_excel():
         brand_file_path = 'static/random.csv'
         brand_file.save(brand_file_path)
         brand_type_csv = 'static/brands.csv'
+        print(brand_file)
         brand_lower_set = set()
         with open(brand_type_csv, newline='', encoding='iso-8859-1') as csvfile:
             reader = csv.reader(csvfile)
@@ -44,7 +45,8 @@ def create_and_save_excel():
         
 
         os.remove(brand_file_path)
-    except:
+    except Exception as e:
+        print(e)
         pass
     try:
         drink_file=request.files['drink-file']
@@ -268,7 +270,7 @@ def create_and_save_excel():
                 return ''  
 
 
-    #     # Columns Extraction
+    # #     # Columns Extraction
                 
     try:
         type_array= list(df[f"{column}"])
@@ -287,6 +289,7 @@ def create_and_save_excel():
             new_number_type.append(str(extract_number(type_array[i])))
             new_size_type.append(str(find_volume_size(type_array[i])))
             new_package_size.append(str(find_package_size(type_array[i])))
+        
 
         df['Type'] = new_type_array
         df['Brand'] = new_brand_type
@@ -294,12 +297,44 @@ def create_and_save_excel():
         df['Size'] = new_size_type
         df['Package Size'] = new_package_size
 
+        def low(string):
+            return str(string).lower()
+        
+        brand_supplier=pd.read_excel('static/Brand-supplier master list.xlsx')
+        manufacturer_list=brand_supplier['Manufacturer']
+        manufacturer_to_insert=[]
+        brands_to_search=list(brand_supplier['Brand'].apply(low))
+        storage_of_brands_finished=[]
+        storage_of_manufacture_of_brands=[]
+        for i in df['Brand']:
+            longest_manufacturer=''
+            brand=str(i).lower()
+            imp_count=storage_of_brands_finished.count(brand)
+            if not (imp_count>0):
+                count=brands_to_search.count(brand)
+                if count>0:
+                    for j in range(count):
+                        position_of_brand=brands_to_search.index(brand)
+                        manufacturer=str(manufacturer_list[position_of_brand])
+                        if len(manufacturer)>len(longest_manufacturer):
+                            if manufacturer!='nan':
+                                longest_manufacturer=manufacturer
+                        brands_to_search[position_of_brand]=''
+                manufacturer_to_insert.append(longest_manufacturer)
+                if brand not in storage_of_brands_finished:
+                    storage_of_brands_finished.append(brand)
+                    storage_of_manufacture_of_brands.append(longest_manufacturer)
+            else:
+                imp_index=storage_of_brands_finished.index(brand)
+                manufacturer_to_insert.append(storage_of_manufacture_of_brands[imp_index])
+        df['Manufacturer']=manufacturer_to_insert
 
         df.to_excel('static/output.xlsx', index=False)
         print('done')
 
         return jsonify('done')
-    except:
+    except Exception as e:
+        print(e)
         return jsonify("column doesn't exist")
 
 
@@ -324,3 +359,4 @@ def index():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
