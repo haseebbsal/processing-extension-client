@@ -17,6 +17,10 @@ import os
 def check():
     return jsonify('working')
 
+@app.route('/gett', methods=['GET'])
+def checkagain():
+    return jsonify('workingggg')
+
 @app.route('/upload', methods=['POST'])
 def create_and_save_excel():
     try:
