@@ -23,29 +23,27 @@ def checkagain():
 
 @app.route('/upload', methods=['POST'])
 def create_and_save_excel():
+
+    drink_types_csv = 'static/drink_types.csv'
+
+    drink_types_lower = set(pd.read_csv(drink_types_csv,encoding='iso-8859-1',header=None)[0])
+    
+
+    csv_file_path = 'static/brands.csv'
+    brand_name_list=list(pd.read_csv(csv_file_path,encoding='iso-8859-1',header=None)[0])
+
+
     try:
         brand_file=request.files['brand-file']
         brand_file_path = 'static/random.csv'
         brand_file.save(brand_file_path)
         brand_type_csv = 'static/brands.csv'
-        print(brand_file)
-        brand_lower_set = set()
-        with open(brand_type_csv, newline='', encoding='iso-8859-1') as csvfile:
-            reader = csv.reader(csvfile)
-            for row in reader:
-                brand_lower_set.add(row[0])
-        brand_new_lower_set = set()
-        with open(brand_file_path, newline='', encoding='iso-8859-1') as csvfile:
-            reader = csv.reader(csvfile)
-            for row in reader:
-                brand_new_lower_set.add(row[0])
-        for i in brand_new_lower_set:
-            brand_lower_set.add(i)
+        brand_lower_set = set(brand_name_list)
         
-        with open(brand_type_csv,'w', newline='', encoding='iso-8859-1') as csvfile:
-            writer = csv.writer(csvfile)
-            for i in brand_lower_set:
-                writer.writerow([i])
+        brand_new_lower_set = set(pd.read_csv(brand_file_path,encoding='iso-8859-1',header=None)[0])
+        brand_lower_set=set(list(brand_lower_set)+list(brand_new_lower_set))
+        brand_dataframe=pd.DataFrame(list(brand_lower_set))
+        brand_dataframe.to_csv(brand_type_csv)
         
 
         os.remove(brand_file_path)
@@ -57,25 +55,13 @@ def create_and_save_excel():
         drink_file_path = 'static/random1.csv'
         drink_file.save(drink_file_path)
         
-        drink_types_csv = 'static/drink_types.csv'
-
-        drink_types_lower = set()
-        with open(drink_types_csv, newline='', encoding='iso-8859-1') as csvfile:
-            reader = csv.reader(csvfile)
-            for row in reader:
-                drink_types_lower.add(row[0])
-        drink_types_new_lower = set()
-        with open(drink_file_path, newline='', encoding='iso-8859-1') as csvfile:
-            reader = csv.reader(csvfile)
-            for row in reader:
-                drink_types_new_lower.add(row[0])
+        drink_types_new_lower = set(pd.read_csv(drink_file_path,encoding='iso-8859-1',header=None)[0])
+        
         for i in drink_types_new_lower:
             drink_types_lower.add(i)
-        
-        with open(drink_types_csv,'w', newline='', encoding='iso-8859-1') as csvfile:
-            writer = csv.writer(csvfile)
-            for i in drink_types_lower:
-                writer.writerow([i])
+        drink_dataframe=pd.DataFrame(list(drink_types_lower))
+        drink_dataframe.to_csv(drink_types_csv)
+       
         os.remove(drink_file_path)
     except Exception as e:
         print(e)
@@ -92,20 +78,6 @@ def create_and_save_excel():
     df = pd.read_csv(f"static/{filename}")
     os.remove(file_path)
 
-    drink_types_csv = 'static/drink_types.csv'
-
-    drink_types_lower = set()
-    with open(drink_types_csv, newline='', encoding='iso-8859-1') as csvfile:
-        reader = csv.reader(csvfile)
-        for row in reader:
-            drink_types_lower.add(row[0].lower())
-
-    brand_name_list=[]
-    csv_file_path = 'static/brands.csv'
-    with open(csv_file_path, newline='', encoding='iso-8859-1') as csvfile:
-            reader = csv.reader(csvfile)
-            for row in reader:
-                brand_name_list.append(row[0].lower())  
 
 
     # Funtion for Number in Case
@@ -128,7 +100,7 @@ def create_and_save_excel():
     def find_brands(description):
         brands_list = ''
         for brand_name in brand_name_list:
-            if brand_name in description.lower():
+            if brand_name.lower() in description.lower():
                 brands_list+=(str(brand_name.upper()))
                 break 
         
@@ -140,7 +112,7 @@ def create_and_save_excel():
         found_type = None
         description_lower = description.lower()
         for drink in drink_types_lower:
-            if drink in description_lower:
+            if drink.lower() in description_lower:
                 found_type = drink.upper()
                 break 
         
@@ -278,10 +250,6 @@ def create_and_save_excel():
                 
     try:
         type_array= list(df[f"{column}"])
-        # brand_type=list(df['Brand'])
-        # number_type=list(df['Number in case'])
-        # size_type=list(df['Size'])
-        # package_size=list(df['Package Size'])
         new_type_array= []
         new_brand_type=[]
         new_number_type=[]
@@ -294,7 +262,6 @@ def create_and_save_excel():
             new_size_type.append(str(find_volume_size(type_array[i])))
             new_package_size.append(str(find_package_size(type_array[i])))
         
-
         df['Type'] = new_type_array
         df['Brand'] = new_brand_type
         df['Number in case'] = new_number_type
