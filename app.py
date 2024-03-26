@@ -100,7 +100,7 @@ def create_and_save_excel():
     def find_brands(description):
         brands_list = ''
         for brand_name in brand_name_list:
-            if brand_name.lower() in description.lower():
+            if brand_name.lower() == description.lower():
                 brands_list+=(str(brand_name.upper()))
                 break 
         
