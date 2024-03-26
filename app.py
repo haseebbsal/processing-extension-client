@@ -49,7 +49,7 @@ def create_and_save_excel():
 
         os.remove(brand_file_path)
     except Exception as e:
-        print(e)
+        # print(e)
         pass
     try:
         drink_file=request.files['drink-file']
@@ -65,7 +65,7 @@ def create_and_save_excel():
        
         os.remove(drink_file_path)
     except Exception as e:
-        print(e)
+        # print(e)
         pass
 
 
