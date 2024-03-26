@@ -41,8 +41,9 @@ def create_and_save_excel():
         brand_lower_set = set(brand_name_list)
         
         brand_new_lower_set = set(pd.read_csv(brand_file_path,encoding='iso-8859-1',header=None)[0])
-        brand_lower_set=set(list(brand_lower_set)+list(brand_new_lower_set))
+        brand_lower_set=brand_lower_set.union(brand_new_lower_set)
         brand_dataframe=pd.DataFrame(list(brand_lower_set))
+        brand_name_list=list(brand_lower_set)
         brand_dataframe.to_csv(brand_type_csv)
         
 
@@ -57,10 +58,10 @@ def create_and_save_excel():
         
         drink_types_new_lower = set(pd.read_csv(drink_file_path,encoding='iso-8859-1',header=None)[0])
         
-        for i in drink_types_new_lower:
-            drink_types_lower.add(i)
+        drink_types_lower=drink_types_lower.union(drink_types_new_lower)
         drink_dataframe=pd.DataFrame(list(drink_types_lower))
         drink_dataframe.to_csv(drink_types_csv)
+        drink_types_lower=list(drink_types_lower)
        
         os.remove(drink_file_path)
     except Exception as e:
@@ -76,7 +77,10 @@ def create_and_save_excel():
     file.save(file_path)
 
     df = pd.read_csv(f"static/{filename}")
+    # print(df)
     os.remove(file_path)
+    # print(drink_types_lower)
+    # print('brandname',brand_name_list)
 
 
 
@@ -100,9 +104,10 @@ def create_and_save_excel():
     def find_brands(description):
         brands_list = ''
         for brand_name in brand_name_list:
-            if brand_name.lower() == description.lower():
+            if brand_name.lower() in description.lower():
                 brands_list+=(str(brand_name.upper()))
                 break 
+       
         
         return brands_list
 
@@ -110,11 +115,14 @@ def create_and_save_excel():
     # # Function for Drink Type
     def find_drink_types(description):
         found_type = None
+        
         description_lower = description.lower()
+
         for drink in drink_types_lower:
             if drink.lower() in description_lower:
                 found_type = drink.upper()
-                break 
+                break
+        
         
         # Additional Patterns
         if found_type is None:
@@ -256,11 +264,18 @@ def create_and_save_excel():
         new_size_type=[]
         new_package_size=[]
         for i in range(len(type_array)):
-            new_type_array.append(str(find_drink_types(type_array[i])))
-            new_brand_type.append(str(find_brands(type_array[i])))
-            new_number_type.append(str(extract_number(type_array[i])))
-            new_size_type.append(str(find_volume_size(type_array[i])))
-            new_package_size.append(str(find_package_size(type_array[i])))
+            if(str(type_array[i])!='nan'):
+                new_type_array.append(str(find_drink_types(str(type_array[i]))))
+                new_brand_type.append(str(find_brands(str(type_array[i]))))
+                new_number_type.append(str(extract_number(str(type_array[i]))))
+                new_size_type.append(str(find_volume_size(str(type_array[i]))))
+                new_package_size.append(str(find_package_size(str(type_array[i]))))
+            else:
+                new_type_array.append('')
+                new_brand_type.append('')
+                new_number_type.append('')
+                new_size_type.append('')
+                new_package_size.append('')
         
         df['Type'] = new_type_array
         df['Brand'] = new_brand_type
@@ -270,7 +285,6 @@ def create_and_save_excel():
 
         def low(string):
             return str(string).lower()
-        
         brand_supplier=pd.read_excel('static/Brand-supplier master list.xlsx')
         manufacturer_list=brand_supplier['Manufacturer']
         manufacturer_to_insert=[]
@@ -306,6 +320,7 @@ def create_and_save_excel():
         return jsonify('done')
     except Exception as e:
         print(e)
+        # print('error is here')
         return jsonify("column doesn't exist")
 
 
