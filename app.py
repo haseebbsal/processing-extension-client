@@ -264,18 +264,13 @@ def create_and_save_excel():
         new_size_type=[]
         new_package_size=[]
         for i in range(len(type_array)):
-            if(str(type_array[i])!='nan'):
-                new_type_array.append(str(find_drink_types(str(type_array[i]))))
-                new_brand_type.append(str(find_brands(str(type_array[i]))))
-                new_number_type.append(str(extract_number(str(type_array[i]))))
-                new_size_type.append(str(find_volume_size(str(type_array[i]))))
-                new_package_size.append(str(find_package_size(str(type_array[i]))))
-            else:
-                new_type_array.append('')
-                new_brand_type.append('')
-                new_number_type.append('')
-                new_size_type.append('')
-                new_package_size.append('')
+            
+            new_type_array.append(str(find_drink_types(str(type_array[i]))))
+            new_brand_type.append(str(find_brands(str(type_array[i]))))
+            new_number_type.append(str(extract_number(str(type_array[i]))))
+            new_size_type.append(str(find_volume_size(str(type_array[i]))))
+            new_package_size.append(str(find_package_size(str(type_array[i]))))
+            
         
         df['Type'] = new_type_array
         df['Brand'] = new_brand_type
