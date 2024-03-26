@@ -17,7 +17,7 @@ import os
 def check():
     return jsonify('working')
 
-@app.route('/gett', methods=['GET'])
+@app.route('/gettt', methods=['GET'])
 def checkagain():
     return jsonify('workingggg')
 
