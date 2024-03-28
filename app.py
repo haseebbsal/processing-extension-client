@@ -611,25 +611,27 @@ def getting_result():
     }
 
     if(job.result):
-        data=job.result['data']
-        actual_data=[]
-        for i in data:
-            filter=[]
-            for j in i:
-                
-                filter.append(str(j))
-            actual_data.append(filter)
 
-        response_object = {
-            "status": "success",
-            "data": {
-                "job_id": job.get_id(),
-                "job_status": job.get_status(),
-                "job_result": actual_data,
-            },
-        }
-        output_dataframe=pd.DataFrame(actual_data,columns=job.result['columns'])
-        output_dataframe.to_excel('static/output.xlsx',index=False)
+        if job.result['status']==200:
+            data=job.result['data']
+            actual_data=[]
+            for i in data:
+                filter=[]
+                for j in i:
+                    
+                    filter.append(str(j))
+                actual_data.append(filter)
+
+            response_object = {
+                "status": "success",
+                "data": {
+                    "job_id": job.get_id(),
+                    "job_status": job.get_status(),
+                    "job_result": actual_data,
+                },
+            }
+            output_dataframe=pd.DataFrame(actual_data,columns=job.result['columns'])
+            output_dataframe.to_excel('static/output.xlsx',index=False)
 
     # if(response_object['data']["job_status"]=='finished'):
     #     if(response_object['data']["job_result"]['']=='finished')
