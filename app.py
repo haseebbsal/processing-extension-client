@@ -258,6 +258,7 @@ def testingg(column):
 
         return {
             "data":df.values.tolist(),
+            "columns":df.columns.tolist(),
             "status":200
 
         }
@@ -620,13 +621,15 @@ def getting_result():
             actual_data.append(filter)
 
         response_object = {
-        "status": "success",
-        "data": {
-            "job_id": job.get_id(),
-            "job_status": job.get_status(),
-            "job_result": actual_data,
-        },
-    }
+            "status": "success",
+            "data": {
+                "job_id": job.get_id(),
+                "job_status": job.get_status(),
+                "job_result": actual_data,
+            },
+        }
+        output_dataframe=pd.DataFrame(actual_data,columns=job.result['columns'])
+        output_dataframe.to_excel('static/output.xlsx')
 
     # if(response_object['data']["job_status"]=='finished'):
     #     if(response_object['data']["job_result"]['']=='finished')
