@@ -16,10 +16,10 @@ import os
 
 queue = Queue(connection=conn)
 
-def processinggg():
-    data=pd.read_csv('static/brands.csv',encoding='iso-8859-1',header=None).values
-    data=list(data)
-    return data
+def testingg():
+    # data=pd.read_csv('static/brands.csv',encoding='iso-8859-1',header=None).values
+    # data=list(data)
+    return 'hi'
 
 # def processinggg(column_data,brand_name_list,drink_types_lower,manufacturer_list,brand_list,columns):
 
@@ -345,7 +345,7 @@ def create_and_save_excel():
     # brand_list=list(brand_supplier['Brand'])
     # print('im here')
     # job = queue.enqueue_call(func='app.processinggg', args=(column_data,brand_name_list,drink_types_lower,manufacturer_list,brand_list,columns))
-    job = queue.enqueue_call(func='app.processinggg')
+    job = queue.enqueue_call(func='app.testingg')
     return jsonify({
         'jobId':job.get_id(),
         'status':200
