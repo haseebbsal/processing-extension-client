@@ -17,8 +17,9 @@ import os
 queue = Queue(connection=conn)
 
 def testingg(nice):
-    data=pd.read_csv('static/input.csv',encoding='iso-8859-1',header=None).values
-    data=list(data)
+    data=pd.read_csv('static/input.csv',encoding='iso-8859-1',header=None)
+    data=data.values.tolist()
+
     return data
 
 # def processinggg(column_data,brand_name_list,drink_types_lower,manufacturer_list,brand_list,columns):
