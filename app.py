@@ -338,7 +338,7 @@ def create_and_save_excel():
     filename = file.filename
     file_path = os.path.join("static", filename)
     file.save(file_path)
-    df = pd.read_csv(f"static/{filename}")[f"{columnn}"].values
+    df = list(pd.read_csv(f"static/{filename}")[f"{columnn}"])
     brand_file=None
     drink_file=None
     try:
