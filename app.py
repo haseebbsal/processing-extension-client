@@ -342,7 +342,7 @@ def create_and_save_excel():
         drink_file=request.files['drink-file']
     except:
        pass
-    job = queue.enqueue_call(processing, args=(columnn))
+    job = queue.enqueue_call(func='app.processing', args=(columnn))
     return jsonify({
         'jobId':job.get_id(),
         'status':200
