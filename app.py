@@ -18,6 +18,7 @@ queue = Queue(connection=conn)
 
 
 def processing(columnn):
+    print(columnn)
     return columnn
     # file = filee
     # filename = file.filename
