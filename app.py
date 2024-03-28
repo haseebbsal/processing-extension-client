@@ -615,10 +615,8 @@ def getting_result():
         for i in data:
             filter=[]
             for j in i:
-                if j=='NaN':
-                    filter.append('')
-                else:
-                    filter.append(j)
+                
+                filter.append(str(j))
             actual_data.append(filter)
 
         response_object = {
