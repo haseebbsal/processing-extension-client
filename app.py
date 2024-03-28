@@ -582,7 +582,7 @@ def savingFiles():
 def create_and_save_excel():
 
     column = request.form['column']
-    job = queue.enqueue(testingg,column)
+    job = queue.enqueue(testingg,column,job_timeout='1h')
     id=job.get_id()
     print('job id',id)
     return jsonify({
