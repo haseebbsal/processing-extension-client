@@ -288,15 +288,16 @@ def create_and_save_excel():
 
     column = request.form['column']
     file = request.files['file']
-    print(column and file)
-    if( column and file):
-        job = queue.enqueue(testingg,'nice')
-        id=job.get_id()
-        print('job id',id)
-        return jsonify({
-            'jobId':id,
-            'status':200
-        })
+    # print(column and file)
+    print(column)
+    print(file)
+    job = queue.enqueue(testingg,'nice')
+    id=job.get_id()
+    print('job id',id)
+    return jsonify({
+        'jobId':id,
+        'status':200
+    })
 
 
 @app.route('/get-result', methods=['POST'])
