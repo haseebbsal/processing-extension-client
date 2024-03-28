@@ -292,6 +292,7 @@ def create_and_save_excel():
     print(column)
     print(file)
     job = queue.enqueue(testingg,'nice')
+    print(job.id)
     id=job.get_id()
     print('job id',id)
     return jsonify({
