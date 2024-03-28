@@ -17,13 +17,14 @@ import os
 queue = Queue(connection=conn)
 
 
-def processing(filee):
-    file = filee
-    filename = file.filename
-    file_path = os.path.join("static", filename)
-    file.save(file_path)
-    df = pd.read_csv(f"static/{filename}")
-    return df
+def processing(columnn):
+    return columnn
+    # file = filee
+    # filename = file.filename
+    # file_path = os.path.join("static", filename)
+    # file.save(file_path)
+    # df = pd.read_csv(f"static/{filename}")
+    # return df
 
     # df = pd.read_csv(f"static/{filename}")
     # print('im running')
@@ -340,7 +341,7 @@ def create_and_save_excel():
         drink_file=request.files['drink-file']
     except:
        pass
-    job = queue.enqueue_call(processing, file)
+    job = queue.enqueue_call(processing, column)
     return jsonify({
         'jobId':job.get_id(),
         'status':200
