@@ -43,6 +43,8 @@ def testingg(column):
     def find_brands(description):
         brands_list = ''
         for brand_name in brand_name_list:
+            print(str(brand_name))
+            print(description.lower())
             if str(brand_name).lower() in description.lower():
                 print(brand_name)
                 brands_list+=(str(brand_name).upper())
