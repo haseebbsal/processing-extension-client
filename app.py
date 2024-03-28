@@ -17,9 +17,9 @@ import os
 queue = Queue(connection=conn)
 
 def testingg(nice):
-    # data=pd.read_csv('static/brands.csv',encoding='iso-8859-1',header=None).values
-    # data=list(data)
-    return nice
+    data=pd.read_csv('static/input.csv',encoding='iso-8859-1',header=None).values
+    data=list(data)
+    return data
 
 # def processinggg(column_data,brand_name_list,drink_types_lower,manufacturer_list,brand_list,columns):
 
@@ -284,13 +284,15 @@ def checkagain():
 
 @app.route('/upload', methods=['POST'])
 def create_and_save_excel():
-    print('running')
 
-    column = request.form['column']
-    file = request.files['file']
-    # print(column and file)
-    print(column)
-    print(file)
+    
+    # print('running')
+
+    # column = request.form['column']
+    # file = request.files['file']
+    # # print(column and file)
+    # print(column)
+    # print(file)
     job = queue.enqueue(testingg,'nice')
     print(job.id)
     id=job.get_id()
