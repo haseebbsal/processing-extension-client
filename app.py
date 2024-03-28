@@ -253,6 +253,8 @@ def testingg(column):
                 manufacturer_to_insert.append(storage_of_manufacture_of_brands[imp_index])
         df['Manufacturer']=manufacturer_to_insert
 
+        print(manufacturer_to_insert)
+
         # df.to_excel('static/output.xlsx', index=False)
         print('done')
 
