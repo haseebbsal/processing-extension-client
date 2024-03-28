@@ -329,7 +329,7 @@ def checkagain():
 @app.route('/upload', methods=['POST'])
 def create_and_save_excel():
     print('im here')
-    column = request.form['column']
+    columnn = request.form['column']
     file = request.files['file']
     brand_file=None
     drink_file=None
@@ -341,7 +341,7 @@ def create_and_save_excel():
         drink_file=request.files['drink-file']
     except:
        pass
-    job = queue.enqueue_call(processing, column)
+    job = queue.enqueue_call(processing, columnn)
     return jsonify({
         'jobId':job.get_id(),
         'status':200
