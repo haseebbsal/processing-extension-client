@@ -223,7 +223,7 @@ def testingg(column):
         # column_data,brand_name_list,drink_types_lower,manufacturer_list,columns
         def low(string):
             return str(string).lower()
-        brand_supplier=pd.read_excel('static/Brand-supplier master list.xlsx')
+        brand_supplier=pd.read_csv('static/Brand-supplier master list.csv')
         manufacturer_list=brand_supplier['Manufacturer']
         manufacturer_to_insert=[]
         brands_to_search=list(brand_supplier['Brand'].apply(low))
