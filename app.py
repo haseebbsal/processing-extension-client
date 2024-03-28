@@ -346,6 +346,7 @@ def create_and_save_excel():
     # print('im here')
     # job = queue.enqueue_call(func='app.processinggg', args=(column_data,brand_name_list,drink_types_lower,manufacturer_list,brand_list,columns))
     job = queue.enqueue_call(testingg,'nice')
+    print('job id',job.get_id())
     return jsonify({
         'jobId':job.get_id(),
         'status':200
