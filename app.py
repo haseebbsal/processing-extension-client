@@ -17,16 +17,7 @@ import os
 queue = Queue(connection=conn)
 
 def testingg(column):
-    # data=pd.read_csv('static/wfwfw.csv')
-    # data=data.values.tolist()
-
-
-    # return data
-
-
-        # Funtion for Number in Case
     
-
     drink_types_lower = set(pd.read_csv('static/drink_types.csv',encoding='iso-8859-1',header=None)[0])
     
 
@@ -589,8 +580,8 @@ def savingFiles():
 @app.route('/process', methods=['POST'])
 def create_and_save_excel():
 
-    # column = request.form['column']
-    job = queue.enqueue(testingg,'nice')
+    column = request.form['column']
+    job = queue.enqueue(testingg,column)
     id=job.get_id()
     print('job id',id)
     return jsonify({
