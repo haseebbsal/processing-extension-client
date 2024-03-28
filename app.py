@@ -17,7 +17,7 @@ import os
 queue = Queue(connection=conn)
 
 def processinggg():
-    data=pd.read_csv('static/brands.csv').values
+    data=pd.read_csv('static/brands.csv',encoding='iso-8859-1',header=None).values
     return list(data)
 
 # def processinggg(column_data,brand_name_list,drink_types_lower,manufacturer_list,brand_list,columns):
