@@ -205,7 +205,7 @@ def testingg(column):
     # #     # Columns Extraction
             
     
-    df=pd.read_csv('input.csv')
+    df=pd.read_csv('static/input.csv')
                 
     try:
         type_array= df[f"{column}"]
