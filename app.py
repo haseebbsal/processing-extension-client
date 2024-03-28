@@ -330,8 +330,8 @@ def create_and_save_excel():
 
 
 
-    # column = request.form['column']
-    # file = request.files['file']
+    column = request.form['column']
+    file = request.files['file']
     # filename = file.filename
     # file_path = os.path.join("static", filename)
     # file.save(file_path)
