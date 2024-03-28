@@ -288,6 +288,7 @@ def create_and_save_excel():
 
     column = request.form['column']
     file = request.files['file']
+    print(column and file)
     if( column and file):
         job = queue.enqueue(testingg,'nice')
         id=job.get_id()
