@@ -227,6 +227,8 @@ def testingg(column):
         manufacturer_list=brand_supplier['Manufacturer']
         manufacturer_to_insert=[]
         brands_to_search=list(brand_supplier['Brand'].apply(low))
+        print(brands_to_search)
+        print(manufacturer_list)
         # brands_to_search=list(map(low,brand_list))
         storage_of_brands_finished=[]
         storage_of_manufacture_of_brands=[]
@@ -240,6 +242,7 @@ def testingg(column):
                     for j in range(count):
                         position_of_brand=brands_to_search.index(brand)
                         manufacturer=str(manufacturer_list[position_of_brand])
+                        print(manufacturer)
                         if len(manufacturer)>len(longest_manufacturer):
                             if manufacturer!='nan':
                                 longest_manufacturer=manufacturer
@@ -253,7 +256,8 @@ def testingg(column):
                 manufacturer_to_insert.append(storage_of_manufacture_of_brands[imp_index])
         df['Manufacturer']=manufacturer_to_insert
 
-        print(manufacturer_to_insert)
+        print(storage_of_brands_finished)
+        print(storage_of_manufacture_of_brands)
 
         # df.to_excel('static/output.xlsx', index=False)
         print('done')
