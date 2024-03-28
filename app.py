@@ -18,7 +18,7 @@ queue = Queue(connection=conn)
 
 
 def processinggg(column_data,brand_name_list,drink_types_lower,manufacturer_list,brand_list,columns):
-    
+
     # Funtion for Number in Case
     def extract_number(description):
         match = re.search(r'(\d+)-', description)
@@ -339,6 +339,7 @@ def create_and_save_excel():
     brand_supplier=pd.read_excel('static/Brand-supplier master list.xlsx')
     manufacturer_list=list(brand_supplier['Manufacturer'])
     brand_list=list(brand_supplier['Brand'])
+    print('im here')
     job = queue.enqueue_call(func='app.processinggg', args=(column_data,brand_name_list,drink_types_lower,manufacturer_list,brand_list,columns))
     return jsonify({
         'jobId':job.get_id(),
