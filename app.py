@@ -599,12 +599,34 @@ def getting_result():
 	# # If job exists then return job id and status along with result
 	# # But result will only be present if job has actually finished
 	# # So this logic checking will be done by the poller function at client-side
+
     response_object = {
         "status": "success",
         "data": {
             "job_id": job.get_id(),
             "job_status": job.get_status(),
             "job_result": job.result,
+        },
+    }
+
+    if(job.result):
+        data=job.result['data']
+        actual_data=[]
+        for i in data:
+            filter=[]
+            for j in i:
+                if j=='NaN':
+                    filter.append('')
+                else:
+                    filter.append(j)
+            actual_data.append(filter)
+
+        response_object = {
+        "status": "success",
+        "data": {
+            "job_id": job.get_id(),
+            "job_status": job.get_status(),
+            "job_result": actual_data,
         },
     }
 
