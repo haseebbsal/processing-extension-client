@@ -284,68 +284,8 @@ def checkagain():
 
 @app.route('/upload', methods=['POST'])
 def create_and_save_excel():
-
-    # drink_types_csv = 'static/drink_types.csv'
-
-    # drink_types_lower = set(pd.read_csv(drink_types_csv,encoding='iso-8859-1',header=None)[0])
-    
-
-    # csv_file_path = 'static/brands.csv'
-    # brand_name_list=list(pd.read_csv(csv_file_path,encoding='iso-8859-1',header=None)[0])
-
-    # try:
-    #     brand_file=request.files['brand-file']
-    #     brand_file_path = 'static/random.csv'
-    #     brand_file.save(brand_file_path)
-    #     brand_type_csv = 'static/brands.csv'
-    #     brand_lower_set = set(brand_name_list)
-        
-    #     brand_new_lower_set = set(pd.read_csv(brand_file_path,encoding='iso-8859-1',header=None)[0])
-    #     brand_lower_set=brand_lower_set.union(brand_new_lower_set)
-    #     brand_dataframe=pd.DataFrame(list(brand_lower_set))
-    #     brand_name_list=list(brand_lower_set)
-    #     brand_dataframe.to_csv(brand_type_csv)
-        
-
-    #     os.remove(brand_file_path)
-    # except:
-    #    pass
-    # try:
-    #     drink_file=request.files['drink-file']
-    #     drink_file_path = 'static/random1.csv'
-    #     drink_file.save(drink_file_path)
-        
-    #     drink_types_new_lower = set(pd.read_csv(drink_file_path,encoding='iso-8859-1',header=None)[0])
-        
-    #     drink_types_lower=drink_types_lower.union(drink_types_new_lower)
-    #     drink_dataframe=pd.DataFrame(list(drink_types_lower))
-    #     drink_dataframe.to_csv(drink_types_csv)
-    #     drink_types_lower=list(drink_types_lower)
-    # except:
-    #    pass
-    
-    
-       
-    #     # os.remove(drink_file_path)
-
-
-
-    column = request.form['column']
-    file = request.files['file']
-    # filename = file.filename
-    # file_path = os.path.join("static", filename)
-    # file.save(file_path)
-
-    # df = pd.read_csv(f"static/{filename}")
-    # column_data=list(df[f"{column}"])
-    # columns=list(df.columns)
-    # os.remove(file_path)
-    # brand_supplier=pd.read_excel('static/Brand-supplier master list.xlsx')
-    # manufacturer_list=list(brand_supplier['Manufacturer'])
-    # brand_list=list(brand_supplier['Brand'])
-    # print('im here')
-    # job = queue.enqueue_call(func='app.processinggg', args=(column_data,brand_name_list,drink_types_lower,manufacturer_list,brand_list,columns))
-    job = queue.enqueue_call(testingg,'nice')
+    print('running')
+    job = queue.enqueue(testingg,'nice')
     print('job id',job.get_id())
     return jsonify({
         'jobId':job.get_id(),
@@ -407,3 +347,67 @@ def index():
 if __name__ == "__main__":
     app.run(debug=True)
 
+
+
+
+
+ # drink_types_csv = 'static/drink_types.csv'
+
+    # drink_types_lower = set(pd.read_csv(drink_types_csv,encoding='iso-8859-1',header=None)[0])
+    
+
+    # csv_file_path = 'static/brands.csv'
+    # brand_name_list=list(pd.read_csv(csv_file_path,encoding='iso-8859-1',header=None)[0])
+
+    # try:
+    #     brand_file=request.files['brand-file']
+    #     brand_file_path = 'static/random.csv'
+    #     brand_file.save(brand_file_path)
+    #     brand_type_csv = 'static/brands.csv'
+    #     brand_lower_set = set(brand_name_list)
+        
+    #     brand_new_lower_set = set(pd.read_csv(brand_file_path,encoding='iso-8859-1',header=None)[0])
+    #     brand_lower_set=brand_lower_set.union(brand_new_lower_set)
+    #     brand_dataframe=pd.DataFrame(list(brand_lower_set))
+    #     brand_name_list=list(brand_lower_set)
+    #     brand_dataframe.to_csv(brand_type_csv)
+        
+
+    #     os.remove(brand_file_path)
+    # except:
+    #    pass
+    # try:
+    #     drink_file=request.files['drink-file']
+    #     drink_file_path = 'static/random1.csv'
+    #     drink_file.save(drink_file_path)
+        
+    #     drink_types_new_lower = set(pd.read_csv(drink_file_path,encoding='iso-8859-1',header=None)[0])
+        
+    #     drink_types_lower=drink_types_lower.union(drink_types_new_lower)
+    #     drink_dataframe=pd.DataFrame(list(drink_types_lower))
+    #     drink_dataframe.to_csv(drink_types_csv)
+    #     drink_types_lower=list(drink_types_lower)
+    # except:
+    #    pass
+    
+    
+       
+    #     # os.remove(drink_file_path)
+
+
+
+    # column = request.form['column']
+    # file = request.files['file']
+    # filename = file.filename
+    # file_path = os.path.join("static", filename)
+    # file.save(file_path)
+
+    # df = pd.read_csv(f"static/{filename}")
+    # column_data=list(df[f"{column}"])
+    # columns=list(df.columns)
+    # os.remove(file_path)
+    # brand_supplier=pd.read_excel('static/Brand-supplier master list.xlsx')
+    # manufacturer_list=list(brand_supplier['Manufacturer'])
+    # brand_list=list(brand_supplier['Brand'])
+    # print('im here')
+    # job = queue.enqueue_call(func='app.processinggg', args=(column_data,brand_name_list,drink_types_lower,manufacturer_list,brand_list,columns))
