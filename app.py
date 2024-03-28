@@ -331,6 +331,8 @@ def checkagain():
 def create_and_save_excel():
     print('im here')
     columnn = request.form['column']
+    print(columnn)
+    print('type of column is ',type(columnn))
     file = request.files['file']
     brand_file=None
     drink_file=None
