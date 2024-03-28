@@ -285,12 +285,17 @@ def checkagain():
 @app.route('/upload', methods=['POST'])
 def create_and_save_excel():
     print('running')
-    job = queue.enqueue(testingg,'nice')
-    print('job id',job.get_id())
-    return jsonify({
-        'jobId':job.get_id(),
-        'status':200
-    })
+
+    column = request.form['column']
+    file = request.files['file']
+    if( column and file):
+        job = queue.enqueue(testingg,'nice')
+        id=job.get_id()
+        print('job id',id)
+        return jsonify({
+            'jobId':id,
+            'status':200
+        })
 
 
 @app.route('/get-result', methods=['POST'])
