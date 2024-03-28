@@ -17,8 +17,8 @@ import os
 queue = Queue(connection=conn)
 
 def testingg(nice):
-    data=pd.read_csv('static/input.csv',encoding='iso-8859-1',header=None)
-    data.to_csv('static/wfwfw.csv')
+    data=pd.read_csv('static/wfwfw.csv',encoding='iso-8859-1',header=None)
+    # data.to_csv('static/wfwfw.csv')
     data=data.values.tolist()
 
 
