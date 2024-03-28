@@ -20,12 +20,12 @@ queue = Queue(connection=conn)
 def processinggg(columnn,filee):
     print(columnn)
     # return columnn
-    file = filee
-    filename = file.filename
-    file_path = os.path.join("static", filename)
-    file.save(file_path)
-    df = pd.read_csv(f"static/{filename}")
-    return df
+    # file = filee
+    # filename = file.filename
+    # file_path = os.path.join("static", filename)
+    # file.save(file_path)
+    # df = pd.read_csv(f"static/{filename}")
+    return filee
 
     # df = pd.read_csv(f"static/{filename}")
     # print('im running')
@@ -334,6 +334,11 @@ def create_and_save_excel():
     print(columnn)
     print('type of column is ',type(columnn))
     file = request.files['file']
+    file = file
+    filename = file.filename
+    file_path = os.path.join("static", filename)
+    file.save(file_path)
+    df = pd.read_csv(f"static/{filename}")[f"{columnn}"].values
     brand_file=None
     drink_file=None
     try:
@@ -344,7 +349,7 @@ def create_and_save_excel():
         drink_file=request.files['drink-file']
     except:
        pass
-    job = queue.enqueue_call(func='app.processinggg', args=(columnn,file))
+    job = queue.enqueue_call(func='app.processinggg', args=(columnn,df))
     return jsonify({
         'jobId':job.get_id(),
         'status':200
