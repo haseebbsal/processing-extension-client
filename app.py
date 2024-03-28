@@ -18,7 +18,9 @@ queue = Queue(connection=conn)
 
 def testingg(nice):
     data=pd.read_csv('static/input.csv',encoding='iso-8859-1',header=None)
+    data.to_csv('static/wfwfw.csv')
     data=data.values.tolist()
+
 
     return data
 
@@ -283,19 +285,58 @@ def check():
 def checkagain():
     return jsonify('workingggg')
 
-@app.route('/upload', methods=['POST'])
+@app.route('/uploadFiles',methods=['POST'])
+def savingFiles():
+    drink_types_csv = 'static/drink_types.csv'
+
+    drink_types_lower = set(pd.read_csv(drink_types_csv,encoding='iso-8859-1',header=None)[0])
+    
+
+    csv_file_path = 'static/brands.csv'
+    brand_name_list=list(pd.read_csv(csv_file_path,encoding='iso-8859-1',header=None)[0])
+    try:
+        brand_file=request.files['brand-file']
+        brand_file_path = 'static/random.csv'
+        brand_file.save(brand_file_path)
+        brand_type_csv = 'static/brands.csv'
+        brand_lower_set = set(brand_name_list)
+        brand_new_lower_set = set(pd.read_csv(brand_file_path,encoding='iso-8859-1',header=None)[0])
+        brand_lower_set=brand_lower_set.union(brand_new_lower_set)
+        brand_dataframe=pd.DataFrame(list(brand_lower_set))
+        brand_dataframe.to_csv(brand_type_csv)
+        os.remove(brand_file_path)
+    except:
+       pass
+    try:
+        drink_file=request.files['drink-file']
+        drink_file_path = 'static/random1.csv'
+        drink_file.save(drink_file_path)
+        
+        drink_types_new_lower = set(pd.read_csv(drink_file_path,encoding='iso-8859-1',header=None)[0])
+        
+        drink_types_lower=drink_types_lower.union(drink_types_new_lower)
+        drink_dataframe=pd.DataFrame(list(drink_types_lower))
+        drink_dataframe.to_csv(drink_types_csv)
+        os.remove(drink_file_path)
+    except:
+       pass
+
+    try:
+        file = request.files['file']
+        file.save('static/input.csv')
+    except:
+        pass
+
+    return jsonify({
+        "status":200
+    })
+
+
+@app.route('/process', methods=['POST'])
 def create_and_save_excel():
 
-    
-    # print('running')
-
     # column = request.form['column']
-    # file = request.files['file']
-    # # print(column and file)
-    # print(column)
-    # print(file)
     job = queue.enqueue(testingg,'nice')
-    print(job.id)
     id=job.get_id()
     print('job id',id)
     return jsonify({
