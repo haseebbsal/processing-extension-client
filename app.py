@@ -44,6 +44,7 @@ def testingg(column):
         brands_list = ''
         for brand_name in brand_name_list:
             if str(brand_name).lower() in description.lower():
+                print(brand_name)
                 brands_list+=(str(brand_name).upper())
                 break 
        
