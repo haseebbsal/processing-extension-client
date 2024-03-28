@@ -629,7 +629,7 @@ def getting_result():
             },
         }
         output_dataframe=pd.DataFrame(actual_data,columns=job.result['columns'])
-        output_dataframe.to_excel('static/output.xlsx')
+        output_dataframe.to_excel('static/output.xlsx',index=False)
 
     # if(response_object['data']["job_status"]=='finished'):
     #     if(response_object['data']["job_result"]['']=='finished')
