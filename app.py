@@ -17,7 +17,7 @@ import os
 queue = Queue(connection=conn)
 
 
-def processing(columnn,filee,brand_filee,drink_filee):
+def processing():
     return 'wowwwww'
     
 
@@ -46,7 +46,7 @@ def create_and_save_excel():
     except:
        pass
     job = queue.enqueue(
-			processing,column,file,brand_file,drink_file)
+			processing)
     return jsonify({
         'jobId':job.get_id(),
         'status':200
