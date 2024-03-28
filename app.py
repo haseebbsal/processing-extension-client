@@ -227,7 +227,7 @@ def testingg(column):
         manufacturer_list=brand_supplier['Manufacturer']
         manufacturer_to_insert=[]
         brands_to_search=list(brand_supplier['Brand'].apply(low))
-        print(brands_to_search)
+        print(brands_to_search[:20])
         print(manufacturer_list)
         # brands_to_search=list(map(low,brand_list))
         storage_of_brands_finished=[]
