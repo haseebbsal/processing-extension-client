@@ -295,60 +295,61 @@ def savingFiles():
     brand_name_list=list(pd.read_csv(csv_file_path,encoding='iso-8859-1',header=None)[0])
     try:
         brand_file=request.files['brand-file']
-        # brand_file_path = 'static/random.csv'
-        # brand_file.save(os.path.join(MYDIR, app.config['UPLOAD_FOLDER'], 'random.csv'))
+        brand_file_path = 'static/random.csv'
+        brand_file.save(brand_file_path)
         # brand_file.save(brand_file_path)
-        # brand_type_csv = 'static/brands.csv'
-        # brand_lower_set = set(brand_name_list)
-        # brand_new_lower_set = set(pd.read_csv(brand_file_path,encoding='iso-8859-1',header=None)[0])
-        # brand_lower_set=brand_lower_set.union(brand_new_lower_set)
-        # brand_dataframe=pd.DataFrame(list(brand_lower_set))
-        # brand_dataframe.to_csv(brand_type_csv,index=False)
-        new_df=list(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/brands.csv',encoding='iso-8859-1',header=None)[0])
-        brand_lower_set = set(new_df)
-        brand_new_lower_set = set(pd.read_csv(brand_file,encoding='iso-8859-1',header=None)[0])
+        brand_type_csv = 'static/brands.csv'
+        brand_lower_set = set(brand_name_list)
+        brand_new_lower_set = set(pd.read_csv(brand_file_path,encoding='iso-8859-1',header=None)[0])
         brand_lower_set=brand_lower_set.union(brand_new_lower_set)
         brand_dataframe=pd.DataFrame(list(brand_lower_set))
-        csv_buffer=BytesIO()
-        brand_dataframe.to_csv(csv_buffer,index=False)
-        csv_buffer.seek(0)
-        s3.put_object(Bucket="markjbs",
-                            Key="brands.csv",
-                            Body=csv_buffer)
+        brand_dataframe.to_csv(brand_type_csv,index=False)
+        # new_df=list(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/brands.csv',encoding='iso-8859-1',header=None)[0])
+        # brand_lower_set = set(new_df)
+        # brand_new_lower_set = set(pd.read_csv(brand_file,encoding='iso-8859-1',header=None)[0])
+        # brand_lower_set=brand_lower_set.union(brand_new_lower_set)
+        # brand_dataframe=pd.DataFrame(list(brand_lower_set))
+        # csv_buffer=BytesIO()
+        # brand_dataframe.to_csv(csv_buffer,index=False)
+        # csv_buffer.seek(0)
+        # s3.put_object(Bucket="markjbs",
+        #                     Key="brands.csv",
+        #                     Body=csv_buffer)
     except:
        pass
     try:
         drink_file=request.files['drink-file']
-        # drink_file_path = 'static/random1.csv'
+        drink_file_path = 'static/random1.csv'
         # drink_file.save(os.path.join(MYDIR, app.config['UPLOAD_FOLDER'], 'random1.csv'))
-        # # drink_file.save(drink_file_path)
+        drink_file.save(drink_file_path)
         
-        # drink_types_new_lower = set(pd.read_csv(drink_file_path,encoding='iso-8859-1',header=None)[0])
+        drink_types_new_lower = set(pd.read_csv(drink_file_path,encoding='iso-8859-1',header=None)[0])
         
-        # drink_types_lower=drink_types_lower.union(drink_types_new_lower)
-        # drink_dataframe=pd.DataFrame(list(drink_types_lower))
-        # drink_dataframe.to_csv(drink_types_csv,index=False)
+        drink_types_lower=drink_types_lower.union(drink_types_new_lower)
+        drink_dataframe=pd.DataFrame(list(drink_types_lower))
+        drink_dataframe.to_csv(drink_types_csv,index=False)
 
-        new_df=list(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/drink_types.csv',encoding='iso-8859-1',header=None)[0])
-        drink_types_lower_set = set(new_df)
-        drink_types_new_lower_set_set = set(pd.read_csv(drink_file,encoding='iso-8859-1',header=None)[0])
-        drink_types_lower_set=drink_types_lower_set.union(drink_types_new_lower_set_set)
-        drink_dataframe=pd.DataFrame(list(drink_types_lower_set))
-        csv_buffer=BytesIO()
-        drink_dataframe.to_csv(csv_buffer,index=False)
-        csv_buffer.seek(0)
-        s3.put_object(Bucket="markjbs",
-                            Key="drink_types.csv",
-                            Body=csv_buffer)
+        # new_df=list(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/drink_types.csv',encoding='iso-8859-1',header=None)[0])
+        # drink_types_lower_set = set(new_df)
+        # drink_types_new_lower_set_set = set(pd.read_csv(drink_file,encoding='iso-8859-1',header=None)[0])
+        # drink_types_lower_set=drink_types_lower_set.union(drink_types_new_lower_set_set)
+        # drink_dataframe=pd.DataFrame(list(drink_types_lower_set))
+        # csv_buffer=BytesIO()
+        # drink_dataframe.to_csv(csv_buffer,index=False)
+        # csv_buffer.seek(0)
+        # s3.put_object(Bucket="markjbs",
+        #                     Key="drink_types.csv",
+        #                     Body=csv_buffer)
 
     except:
        pass
 
     try:
         file = request.files['file']
-        s3.put_object(Bucket="markjbs",
-                      Key="input.csv",
-                      Body=file)
+        file.save('static/input.csv')
+        # s3.put_object(Bucket="markjbs",
+        #               Key="input.csv",
+        #               Body=file)
     except Exception as e:
         print(e)
         pass
