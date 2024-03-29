@@ -336,12 +336,13 @@ def savingFiles():
 
     try:
         file = request.files['file']
-        file_contents=file.read()
-        s3 = boto3.client('s3')
-        # file.save('static/input.csv')
-        s3.upload_file(Bucket="markjbs",
+        s3 = boto3.client('s3',
+                      aws_access_key_id='AKIA4BVLINANA5WQAY7U',
+                      aws_secret_access_key='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')
+        s3.put_object(Bucket="markjbs",
                       Key="inputt.csv",
-                      Body=file_contents)
+                      Body=file)
+        # file.save('static/input.csv')
         # obj.upload_file(
         #     Filename="input.csv",
         #     Bucket="markjbs",
