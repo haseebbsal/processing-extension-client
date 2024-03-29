@@ -336,12 +336,12 @@ def savingFiles():
 
     try:
         file = request.files['file']
-        # file_contents=file.read()
+        file_contents=file.read()
         s3 = boto3.client('s3')
         # file.save('static/input.csv')
         s3.upload_file(Bucket="markjbs",
                       Key="inputt.csv",
-                      Filename=file.filename)
+                      Body=file_contents)
         # obj.upload_file(
         #     Filename="input.csv",
         #     Bucket="markjbs",
