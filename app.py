@@ -224,7 +224,7 @@ def testingg(column):
         df['Package Size'] = new_package_size
         def low(string):
             return str(string).lower()
-        brand_supplier=pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/Brand-supplier.csv',dtype='object')
+        brand_supplier=pd.read_csv('static/Brand-supplier.csv',dtype='object')
         manufacturer_list=brand_supplier['Manufacturer']
         manufacturer_to_insert=[]
         brands_to_search=list(brand_supplier['Brand'].apply(low))
@@ -304,7 +304,7 @@ def savingFiles():
         brand_lower_set=brand_lower_set.union(brand_new_lower_set)
         brand_dataframe=pd.DataFrame(list(brand_lower_set))
         brand_dataframe.to_csv(brand_type_csv,index=False)
-        # new_df=list(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/brands.csv',encoding='iso-8859-1',header=None)[0])
+        # new_df=list(pd.read_csv('static/brands.csv',encoding='iso-8859-1',header=None)[0])
         # brand_lower_set = set(new_df)
         # brand_new_lower_set = set(pd.read_csv(brand_file,encoding='iso-8859-1',header=None)[0])
         # brand_lower_set=brand_lower_set.union(brand_new_lower_set)
@@ -329,7 +329,7 @@ def savingFiles():
         drink_dataframe=pd.DataFrame(list(drink_types_lower))
         drink_dataframe.to_csv(drink_types_csv,index=False)
 
-        # new_df=list(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/drink_types.csv',encoding='iso-8859-1',header=None)[0])
+        # new_df=list(pd.read_csv('static/drink_types.csv',encoding='iso-8859-1',header=None)[0])
         # drink_types_lower_set = set(new_df)
         # drink_types_new_lower_set_set = set(pd.read_csv(drink_file,encoding='iso-8859-1',header=None)[0])
         # drink_types_lower_set=drink_types_lower_set.union(drink_types_new_lower_set_set)
