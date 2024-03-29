@@ -22,8 +22,8 @@ queue = Queue(connection=conn)
 def process_and_upload_csv(csv_data):
 
     s3 = boto3.client('s3',
-                      aws_access_key_id='AKIA4BVLINANA5WQAY7U',
-                      aws_secret_access_key='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')
+                      aws_access_key_id='AKIA4BVLINANKYVEG6UV',
+                      aws_secret_access_key='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')
     # Upload CSV data to S3 bucket
     s3.put_object(Bucket="markjbs", Key="input.csv", Body=csv_data)
 
@@ -294,8 +294,14 @@ def checkagain():
 def get_presigned_url():
     # Generate a pre-signed URL for uploading to S3
     s3 = boto3.client('s3',
-                      aws_access_key_id='AKIA4BVLINANA5WQAY7U',
-                      aws_secret_access_key='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')
+                      aws_access_key_id='AKIA4BVLINANKYVEG6UV',
+                      aws_secret_access_key='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'
+                      )
+    # presigned_url=s3.generate_presigned_post(
+    #         'markjbs',
+    #         "input.csv",
+    #         ExpiresIn = 3600,
+    #     )
     presigned_url = s3.generate_presigned_url(
         'put_object',
         Params={'Bucket': 'markjbs', 'Key': 'input.csv'},
@@ -306,8 +312,8 @@ def get_presigned_url():
 @app.route('/uploadFiles',methods=['POST'])
 def savingFiles():
     s3 = boto3.client('s3',
-                      aws_access_key_id='AKIA4BVLINANA5WQAY7U',
-                      aws_secret_access_key='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')
+                      aws_access_key_id='AKIA4BVLINANKYVEG6UV',
+                      aws_secret_access_key='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')
     try:
         brand_file=request.files['brand-file']
         # brand_file_path = 'static/random.csv'
