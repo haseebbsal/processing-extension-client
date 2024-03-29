@@ -10,7 +10,6 @@ from rq.job import Job
 import os
 import boto3
 
-obj= boto3.client("s3")
 
 
 # Configuration for the upload folder
@@ -298,6 +297,7 @@ def checkagain():
 
 @app.route('/uploadFiles',methods=['POST'])
 def savingFiles():
+    obj= boto3.client("s3")
     drink_types_csv = 'static/drink_types.csv'
 
     drink_types_lower = set(pd.read_csv(drink_types_csv,encoding='iso-8859-1',header=None)[0])
@@ -336,12 +336,19 @@ def savingFiles():
 
     try:
         file = request.files['file']
-        file.save('static/input.csv')
-        obj.upload_file(
-            Filename="static/input.csv",
-            Bucket="markjbs",
-            Key="inputt.csv"
-        )
+        file_contents=file.read()
+        s3 = boto3.client('s3',
+                      aws_access_key_id='AKIA4BVLINANA5WQAY7U',
+                      aws_secret_access_key='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')
+        s3.put_object(Bucket="markjbs",
+                      Key="inputt.csv",
+                      Body=file_contents)
+        # file.save('static/input.csv')
+        # obj.upload_file(
+        #     Filename="input.csv",
+        #     Bucket="markjbs",
+        #     Body=file_contents
+        # )
     except:
         pass
 
