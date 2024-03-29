@@ -347,7 +347,8 @@ def savingFiles():
         #     Bucket="markjbs",
         #     Body=file_contents
         # )
-    except:
+    except Exception as e:
+        print(e)
         pass
 
     return jsonify({
