@@ -199,7 +199,7 @@ def testingg(column):
     # #     # Columns Extraction
             
     
-    df=pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/input.csv')
+    df=pd.read_csv('static/input.csv')
                 
     try:
         type_array= df[f"{column}"]
@@ -304,6 +304,7 @@ def savingFiles():
         brand_lower_set=brand_lower_set.union(brand_new_lower_set)
         brand_dataframe=pd.DataFrame(list(brand_lower_set))
         brand_dataframe.to_csv(brand_type_csv,index=False)
+        os.remove(brand_file_path)
         # new_df=list(pd.read_csv('static/brands.csv',encoding='iso-8859-1',header=None)[0])
         # brand_lower_set = set(new_df)
         # brand_new_lower_set = set(pd.read_csv(brand_file,encoding='iso-8859-1',header=None)[0])
@@ -328,6 +329,7 @@ def savingFiles():
         drink_types_lower=drink_types_lower.union(drink_types_new_lower)
         drink_dataframe=pd.DataFrame(list(drink_types_lower))
         drink_dataframe.to_csv(drink_types_csv,index=False)
+        os.remove(drink_file_path)
 
         # new_df=list(pd.read_csv('static/drink_types.csv',encoding='iso-8859-1',header=None)[0])
         # drink_types_lower_set = set(new_df)
