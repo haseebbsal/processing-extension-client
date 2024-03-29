@@ -25,7 +25,7 @@ def process_and_upload_csv(csv_data):
                       aws_access_key_id='AKIA4BVLINANA5WQAY7U',
                       aws_secret_access_key='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')
     # Upload CSV data to S3 bucket
-    s3.put_object(Bucket="markjbs", Key="input.csv", Body=csv_data.encode('utf-8'))
+    s3.put_object(Bucket="markjbs", Key="input.csv", Body=csv_data)
 
 def testingg(column):
     
@@ -348,7 +348,6 @@ def savingFiles():
     try:
         print('im here')
         file = request.files['file']
-        csv_data = file.read().decode('utf-8')
     
     # Enqueue the entire CSV data for processing
         queue.enqueue(process_and_upload_csv, csv_data)
