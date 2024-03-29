@@ -8,7 +8,9 @@ from worker import conn
 from rq import Queue
 from rq.job import Job
 import os
+import boto3
 
+obj= boto3.client("s3")
 
 
 # Configuration for the upload folder
@@ -334,8 +336,12 @@ def savingFiles():
 
     try:
         file = request.files['file']
-        file.save(os.path.join(MYDIR, app.config['UPLOAD_FOLDER'], 'input.csv'))
-        # file.save('static/input.csv')
+        file.save('static/input.csv')
+        obj.upload_file(
+            Filename="static/input.csv",
+            Bucket="markjbs",
+            Key="inputt.csv"
+        )
     except:
         pass
 
