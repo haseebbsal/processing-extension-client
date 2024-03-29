@@ -295,23 +295,24 @@ def get_presigned_url():
     # Generate a pre-signed URL for uploading to S3
     s3 = boto3.client('s3',
                       aws_access_key_id='AKIA4BVLINANKYVEG6UV',
-                      aws_secret_access_key='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'
+                      aws_secret_access_key='AEu7e0czJOBtY1XWh9ybfJPxpUxlyBM7eZ5jnUb8',
+                      region_name="us-west-2"
                       )
-    presigned_url=s3.generate_presigned_post(
-            'markjbs',
-            "input.csv",
-            ExpiresIn = 3600,
-        )
+    # presigned_url=s3.generate_presigned_post(
+    #         'markjbs',
+    #         "input.csv",
+    #         ExpiresIn = 3600,
+    #     )
 #     .generate_presigned_post(
 #     Bucket = 'beabetterdev-presigned-demo',
 #     Key = OBJECT_NAME_TO_UPLOAD,
 #     ExpiresIn = 10 
 # )
-    # presigned_url = s3.generate_presigned_url(
-    #     'put_object',
-    #     Params={'Bucket': 'markjbs', 'Key': 'input.csv'},
-    #     ExpiresIn=3600  # URL expires in 1 hour (adjust as needed)
-    # )
+    presigned_url = s3.generate_presigned_url(
+        'put_object',
+        Params={'Bucket': 'markjbs', 'Key': 'input.csv'},
+        ExpiresIn=3600  # URL expires in 1 hour (adjust as needed)
+    )
     return jsonify({'presigned_url': presigned_url})
 
 @app.route('/uploadFiles',methods=['POST'])
