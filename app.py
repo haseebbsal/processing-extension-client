@@ -350,10 +350,10 @@ def savingFiles():
         file = request.files['file']
     
     # Enqueue the entire CSV data for processing
-        queue.enqueue(process_and_upload_csv, file)
-        # s3.put_object(Bucket="markjbs",
-        #               Key="input.csv",
-        #               Body=file)
+        # queue.enqueue(process_and_upload_csv, file)
+        s3.put_object(Bucket="markjbs",
+                      Key="input.csv",
+                      Body=file)
         print('done')
     except Exception as e:
         print(e)
