@@ -558,7 +558,7 @@ def savingFiles():
         brand_new_lower_set = set(pd.read_csv(brand_file_path,encoding='iso-8859-1',header=None)[0])
         brand_lower_set=brand_lower_set.union(brand_new_lower_set)
         brand_dataframe=pd.DataFrame(list(brand_lower_set))
-        brand_dataframe.to_csv(brand_type_csv)
+        brand_dataframe.to_csv(brand_type_csv,index=False)
         os.remove(brand_file_path)
     except:
        pass
@@ -571,7 +571,7 @@ def savingFiles():
         
         drink_types_lower=drink_types_lower.union(drink_types_new_lower)
         drink_dataframe=pd.DataFrame(list(drink_types_lower))
-        drink_dataframe.to_csv(drink_types_csv)
+        drink_dataframe.to_csv(drink_types_csv,index=False)
         os.remove(drink_file_path)
     except:
        pass
