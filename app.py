@@ -7,9 +7,17 @@ import re
 from worker import conn
 from rq import Queue
 from rq.job import Job
+
+
+
+# Configuration for the upload folder
  
 
 app = Flask(__name__)
+
+MYDIR = os.path.dirname(__file__)
+
+app.config['UPLOAD_FOLDER'] = 'static'
 
 CORS(app)
 import os
@@ -46,7 +54,6 @@ def testingg(column):
             print(str(brand_name))
             print(description.lower())
             if str(brand_name).lower() in description.lower():
-                print(brand_name)
                 brands_list+=(str(brand_name).upper())
                 break 
        
@@ -230,8 +237,6 @@ def testingg(column):
         manufacturer_list=brand_supplier['Manufacturer']
         manufacturer_to_insert=[]
         brands_to_search=list(brand_supplier['Brand'].apply(low))
-        print(brands_to_search[:20])
-        print(manufacturer_list)
         # brands_to_search=list(map(low,brand_list))
         storage_of_brands_finished=[]
         storage_of_manufacture_of_brands=[]
@@ -259,8 +264,6 @@ def testingg(column):
                 manufacturer_to_insert.append(storage_of_manufacture_of_brands[imp_index])
         df['Manufacturer']=manufacturer_to_insert
 
-        print(storage_of_brands_finished)
-        print(storage_of_manufacture_of_brands)
 
         # df.to_excel('static/output.xlsx', index=False)
         print('done')
@@ -552,7 +555,8 @@ def savingFiles():
     try:
         brand_file=request.files['brand-file']
         brand_file_path = 'static/random.csv'
-        brand_file.save(brand_file_path)
+        brand_file.save(os.path.join(MYDIR, app.config['UPLOAD_FOLDER'], 'random.csv'))
+        # brand_file.save(brand_file_path)
         brand_type_csv = 'static/brands.csv'
         brand_lower_set = set(brand_name_list)
         brand_new_lower_set = set(pd.read_csv(brand_file_path,encoding='iso-8859-1',header=None)[0])
@@ -565,7 +569,8 @@ def savingFiles():
     try:
         drink_file=request.files['drink-file']
         drink_file_path = 'static/random1.csv'
-        drink_file.save(drink_file_path)
+        drink_file.save(os.path.join(MYDIR, app.config['UPLOAD_FOLDER'], 'random1.csv'))
+        # drink_file.save(drink_file_path)
         
         drink_types_new_lower = set(pd.read_csv(drink_file_path,encoding='iso-8859-1',header=None)[0])
         
@@ -578,7 +583,8 @@ def savingFiles():
 
     try:
         file = request.files['file']
-        file.save('static/input.csv')
+        file.save(os.path.join(MYDIR, app.config['UPLOAD_FOLDER'], 'input.csv'))
+        # file.save('static/input.csv')
     except:
         pass
 
