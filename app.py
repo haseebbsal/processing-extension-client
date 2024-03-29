@@ -46,8 +46,6 @@ def testingg(column):
     def find_brands(description):
         brands_list = ''
         for brand_name in brand_name_list:
-            print(str(brand_name))
-            print(description.lower())
             if str(brand_name).lower() in description.lower():
                 brands_list+=(str(brand_name).upper())
                 break 
@@ -226,7 +224,7 @@ def testingg(column):
         df['Package Size'] = new_package_size
         def low(string):
             return str(string).lower()
-        brand_supplier=pd.read_csv('static/Brand-supplier master list.csv',dtype='object')
+        brand_supplier=pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/Brand-supplier master list.csv',dtype='object')
         manufacturer_list=brand_supplier['Manufacturer']
         manufacturer_to_insert=[]
         brands_to_search=list(brand_supplier['Brand'].apply(low))
