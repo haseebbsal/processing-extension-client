@@ -1,24 +1,18 @@
-from flask import Flask, render_template,jsonify,request,send_file
+from flask import Flask,jsonify,request,send_file
 from flask_cors import CORS
 import pandas as pd
-import numpy as np
-import csv
 import re
 from worker import conn
 from rq import Queue
 from rq.job import Job
 import os
 import boto3
+from io import BytesIO
 
-
-# Configuration for the upload folder
  
 
 app = Flask(__name__)
 
-MYDIR = os.path.dirname(__file__)
-
-app.config['UPLOAD_FOLDER'] = 'static'
 
 CORS(app)
 import os
@@ -27,10 +21,10 @@ queue = Queue(connection=conn)
 
 def testingg(column):
     
-    drink_types_lower = set(pd.read_csv('static/drink_types.csv',encoding='iso-8859-1',header=None)[0])
+    drink_types_lower = set(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/drink_types.csv',encoding='iso-8859-1',header=None)[0])
     
 
-    csv_file_path = 'static/brands.csv'
+    csv_file_path = 'https://markjbs.s3.us-west-2.amazonaws.com/brands.csv'
     brand_name_list=list(pd.read_csv(csv_file_path,encoding='iso-8859-1',header=None)[0])
 
     def extract_number(description):
@@ -230,15 +224,12 @@ def testingg(column):
         df['Number in case'] = new_number_type
         df['Size'] = new_size_type
         df['Package Size'] = new_package_size
-            
-        # column_data,brand_name_list,drink_types_lower,manufacturer_list,columns
         def low(string):
             return str(string).lower()
         brand_supplier=pd.read_csv('static/Brand-supplier master list.csv',dtype='object')
         manufacturer_list=brand_supplier['Manufacturer']
         manufacturer_to_insert=[]
         brands_to_search=list(brand_supplier['Brand'].apply(low))
-        # brands_to_search=list(map(low,brand_list))
         storage_of_brands_finished=[]
         storage_of_manufacture_of_brands=[]
         for i in new_brand_type:
@@ -265,8 +256,6 @@ def testingg(column):
                 manufacturer_to_insert.append(storage_of_manufacture_of_brands[imp_index])
         df['Manufacturer']=manufacturer_to_insert
 
-
-        # df.to_excel('static/output.xlsx', index=False)
         print('done')
 
         return {
@@ -296,7 +285,9 @@ def checkagain():
 
 @app.route('/uploadFiles',methods=['POST'])
 def savingFiles():
-    obj= boto3.client("s3")
+    s3 = boto3.client('s3',
+                      aws_access_key_id='AKIA4BVLINANA5WQAY7U',
+                      aws_secret_access_key='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')
     drink_types_csv = 'static/drink_types.csv'
 
     drink_types_lower = set(pd.read_csv(drink_types_csv,encoding='iso-8859-1',header=None)[0])
@@ -306,38 +297,57 @@ def savingFiles():
     brand_name_list=list(pd.read_csv(csv_file_path,encoding='iso-8859-1',header=None)[0])
     try:
         brand_file=request.files['brand-file']
-        brand_file_path = 'static/random.csv'
-        brand_file.save(os.path.join(MYDIR, app.config['UPLOAD_FOLDER'], 'random.csv'))
+        # brand_file_path = 'static/random.csv'
+        # brand_file.save(os.path.join(MYDIR, app.config['UPLOAD_FOLDER'], 'random.csv'))
         # brand_file.save(brand_file_path)
-        brand_type_csv = 'static/brands.csv'
-        brand_lower_set = set(brand_name_list)
-        brand_new_lower_set = set(pd.read_csv(brand_file_path,encoding='iso-8859-1',header=None)[0])
+        # brand_type_csv = 'static/brands.csv'
+        # brand_lower_set = set(brand_name_list)
+        # brand_new_lower_set = set(pd.read_csv(brand_file_path,encoding='iso-8859-1',header=None)[0])
+        # brand_lower_set=brand_lower_set.union(brand_new_lower_set)
+        # brand_dataframe=pd.DataFrame(list(brand_lower_set))
+        # brand_dataframe.to_csv(brand_type_csv,index=False)
+        new_df=list(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/brands.csv',encoding='iso-8859-1',header=None)[0])
+        brand_lower_set = set(new_df)
+        brand_new_lower_set = set(pd.read_csv(brand_file,encoding='iso-8859-1',header=None)[0])
         brand_lower_set=brand_lower_set.union(brand_new_lower_set)
         brand_dataframe=pd.DataFrame(list(brand_lower_set))
-        brand_dataframe.to_csv(brand_type_csv,index=False)
-        os.remove(brand_file_path)
+        csv_buffer=BytesIO()
+        brand_dataframe.to_csv(csv_buffer,index=False)
+        csv_buffer.seek(0)
+        s3.put_object(Bucket="markjbs",
+                            Key="brands.csv",
+                            Body=csv_buffer)
     except:
        pass
     try:
         drink_file=request.files['drink-file']
-        drink_file_path = 'static/random1.csv'
-        drink_file.save(os.path.join(MYDIR, app.config['UPLOAD_FOLDER'], 'random1.csv'))
-        # drink_file.save(drink_file_path)
+        # drink_file_path = 'static/random1.csv'
+        # drink_file.save(os.path.join(MYDIR, app.config['UPLOAD_FOLDER'], 'random1.csv'))
+        # # drink_file.save(drink_file_path)
         
-        drink_types_new_lower = set(pd.read_csv(drink_file_path,encoding='iso-8859-1',header=None)[0])
+        # drink_types_new_lower = set(pd.read_csv(drink_file_path,encoding='iso-8859-1',header=None)[0])
         
-        drink_types_lower=drink_types_lower.union(drink_types_new_lower)
-        drink_dataframe=pd.DataFrame(list(drink_types_lower))
-        drink_dataframe.to_csv(drink_types_csv,index=False)
-        os.remove(drink_file_path)
+        # drink_types_lower=drink_types_lower.union(drink_types_new_lower)
+        # drink_dataframe=pd.DataFrame(list(drink_types_lower))
+        # drink_dataframe.to_csv(drink_types_csv,index=False)
+
+        new_df=list(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/drink_types.csv',encoding='iso-8859-1',header=None)[0])
+        drink_types_lower_set = set(new_df)
+        drink_types_new_lower_set_set = set(pd.read_csv(drink_file,encoding='iso-8859-1',header=None)[0])
+        drink_types_lower_set=drink_types_lower_set.union(drink_types_new_lower_set_set)
+        drink_dataframe=pd.DataFrame(list(drink_types_lower_set))
+        csv_buffer=BytesIO()
+        drink_dataframe.to_csv(csv_buffer,index=False)
+        csv_buffer.seek(0)
+        s3.put_object(Bucket="markjbs",
+                            Key="drink_types.csv",
+                            Body=csv_buffer)
+
     except:
        pass
 
     try:
         file = request.files['file']
-        s3 = boto3.client('s3',
-                      aws_access_key_id='AKIA4BVLINANA5WQAY7U',
-                      aws_secret_access_key='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')
         s3.put_object(Bucket="markjbs",
                       Key="input.csv",
                       Body=file)
