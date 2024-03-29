@@ -299,6 +299,7 @@ def get_presigned_url():
     presigned_url = s3.generate_presigned_url(
         'put_object',
         Params={'Bucket': 'markjbs', 'Key': 'input.csv'},
+        ExpiresIn=3600  # URL expires in 1 hour (adjust as needed)
     )
     return jsonify({'presigned_url': presigned_url})
 
