@@ -289,6 +289,19 @@ def check():
 def checkagain():
     return jsonify('workingggg')
 
+
+@app.route('/get_presigned_url', methods=['POST'])
+def get_presigned_url():
+    # Generate a pre-signed URL for uploading to S3
+    s3 = boto3.client('s3',
+                      aws_access_key_id='AKIA4BVLINANA5WQAY7U',
+                      aws_secret_access_key='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')
+    presigned_url = s3.generate_presigned_url(
+        'put_object',
+        Params={'Bucket': 'markjbs', 'Key': 'input.csv'},
+    )
+    return jsonify({'presigned_url': presigned_url})
+
 @app.route('/uploadFiles',methods=['POST'])
 def savingFiles():
     s3 = boto3.client('s3',
@@ -345,19 +358,19 @@ def savingFiles():
     except:
        pass
 
-    try:
-        print('im here')
-        file = request.files['file']
-    
-    # Enqueue the entire CSV data for processing
-        # queue.enqueue(process_and_upload_csv, file)
-        s3.put_object(Bucket="markjbs",
-                      Key="input.csv",
-                      Body=file)
-        print('done')
-    except Exception as e:
-        print(e)
-        pass
+    # try:
+    #     print('im here')
+    #     file = request.files['file']
+
+    # # Enqueue the entire CSV data for processing
+    #     # queue.enqueue(process_and_upload_csv, file)
+    #     s3.put_object(Bucket="markjbs",
+    #                   Key="input.csv",
+    #                   Body=file)
+    #     print('done')
+    # except Exception as e:
+    #     print(e)
+    #     pass
 
     return jsonify({
         "status":200
