@@ -11,7 +11,6 @@ import os
 import boto3
 
 
-
 # Configuration for the upload folder
  
 
@@ -208,7 +207,7 @@ def testingg(column):
     # #     # Columns Extraction
             
     
-    df=pd.read_csv('static/input.csv')
+    df=pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/input.csv')
                 
     try:
         type_array= df[f"{column}"]
@@ -340,14 +339,8 @@ def savingFiles():
                       aws_access_key_id='AKIA4BVLINANA5WQAY7U',
                       aws_secret_access_key='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')
         s3.put_object(Bucket="markjbs",
-                      Key="inputt.csv",
+                      Key="input.csv",
                       Body=file)
-        # file.save('static/input.csv')
-        # obj.upload_file(
-        #     Filename="input.csv",
-        #     Bucket="markjbs",
-        #     Body=file_contents
-        # )
     except Exception as e:
         print(e)
         pass
