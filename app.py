@@ -338,10 +338,12 @@ def savingFiles():
        pass
 
     try:
+        print('im here')
         file = request.files['file']
         s3.put_object(Bucket="markjbs",
                       Key="input.csv",
                       Body=file)
+        print('done')
     except Exception as e:
         print(e)
         pass
