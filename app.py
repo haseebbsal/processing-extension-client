@@ -19,6 +19,14 @@ import os
 
 queue = Queue(connection=conn)
 
+def process_and_upload_csv(csv_data):
+
+    s3 = boto3.client('s3',
+                      aws_access_key_id='AKIA4BVLINANA5WQAY7U',
+                      aws_secret_access_key='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')
+    # Upload CSV data to S3 bucket
+    s3.put_object(Bucket="markjbs", Key="input.csv", Body=csv_data.encode('utf-8'))
+
 def testingg(column):
     
     drink_types_lower = set(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/drink_types.csv',encoding='iso-8859-1',header=None)[0])
@@ -340,9 +348,13 @@ def savingFiles():
     try:
         print('im here')
         file = request.files['file']
-        s3.put_object(Bucket="markjbs",
-                      Key="input.csv",
-                      Body=file)
+        csv_data = file.read().decode('utf-8')
+    
+    # Enqueue the entire CSV data for processing
+        queue.enqueue(process_and_upload_csv, csv_data)
+        # s3.put_object(Bucket="markjbs",
+        #               Key="input.csv",
+        #               Body=file)
         print('done')
     except Exception as e:
         print(e)
