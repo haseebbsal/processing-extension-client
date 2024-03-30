@@ -16,14 +16,17 @@ app = Flask(__name__)
 
 CORS(app)
 
+aws_access = os.getenv("AWS_ACCESS_KEY_ID")
+aws_secret=os.getenv("AWS_SECRET_ACCESS_KEY")
+bucket=os.getenv("S3_BUCKET")
 
 queue = Queue(connection=conn)
 
 def process_and_upload_csv(csv_data):
 
     s3 = boto3.client('s3',
-                      aws_access_key_id='AKIA4BVLINANKYVEG6UV',
-                      aws_secret_access_key='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')
+                      aws_access_key_id=aws_access,
+                      aws_secret_access_key=aws_secret)
     # Upload CSV data to S3 bucket
     s3.put_object(Bucket="markjbs", Key="input.csv", Body=csv_data)
 
@@ -296,7 +299,7 @@ def checkagain():
 
 #     id=request.json
 #     s3 = boto3.client('s3',
-#                       aws_access_key_id='AKIA4BVLINANKYVEG6UV',
+#                       aws_access_key_id=aws_access,
 #                       aws_secret_access_key='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',
 #                       region_name="us-west-2"
 #                       )
@@ -324,8 +327,8 @@ def checkagain():
 @app.route('/uploadFiles',methods=['POST'])
 def savingFiles():
     s3 = boto3.client('s3',
-                      aws_access_key_id='AKIA4BVLINANKYVEG6UV',
-                      aws_secret_access_key='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')
+                      aws_access_key_id=aws_access,
+                      aws_secret_access_key=aws_secret)
     try:
         brand_file=request.files['brand-file']
         # brand_file_path = 'static/random.csv'
