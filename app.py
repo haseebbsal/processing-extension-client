@@ -7,6 +7,7 @@ from rq import Queue
 from rq.job import Job
 import os
 import boto3
+import requests
 from io import BytesIO
 
  
@@ -290,30 +291,36 @@ def checkagain():
     return jsonify('workingggg')
 
 
-@app.route('/get_presigned_url', methods=['POST'])
-def get_presigned_url():
-    # Generate a pre-signed URL for uploading to S3
-    s3 = boto3.client('s3',
-                      aws_access_key_id='AKIA4BVLINANKYVEG6UV',
-                      aws_secret_access_key='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',
-                      region_name="us-west-2"
-                      )
-    # presigned_url=s3.generate_presigned_post(
-    #         'markjbs',
-    #         "input.csv",
-    #         ExpiresIn = 3600,
-    #     )
-#     .generate_presigned_post(
-#     Bucket = 'beabetterdev-presigned-demo',
-#     Key = OBJECT_NAME_TO_UPLOAD,
-#     ExpiresIn = 10 
-# )
-    presigned_url = s3.generate_presigned_url(
-        'put_object',
-        Params={'Bucket': 'markjbs', 'Key': 'input.csv'},
-        ExpiresIn=3600  # URL expires in 1 hour (adjust as needed)
-    )
-    return jsonify({'presigned_url': presigned_url})
+# @app.route('/get_presigned_url', methods=['POST'])
+# def get_presigned_url():
+#     # Generate a pre-signed URL for uploading to S3
+
+#     id=request.json
+#     s3 = boto3.client('s3',
+#                       aws_access_key_id='AKIA4BVLINANKYVEG6UV',
+#                       aws_secret_access_key='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',
+#                       region_name="us-west-2"
+#                       )
+#     presigned_url=s3.generate_presigned_post(
+#             Bucket='markjbs',
+#             Key="irgreger.csv",
+#             ExpiresIn = 3600,
+#         )
+# #     .generate_presigned_post(
+# #     Bucket = 'beabetterdev-presigned-demo',
+# #     Key = OBJECT_NAME_TO_UPLOAD,
+# #     ExpiresIn = 10 
+# # )
+#     # presigned_url = s3.generate_presigned_url(
+#     #     'put_object',
+#     #     Params={'Bucket': 'markjbs', 'Key': 'input.csv'},
+#     #     ExpiresIn=3600  # URL expires in 1 hour (adjust as needed)
+#     # )
+#     print(presigned_url)
+#     files={'file':open(f"{id['object_name']}",'rb')}
+#     r=requests.post(presigned_url['url'],data=presigned_url['fields'],files=files)
+#     print(r.status_code)
+#     return jsonify({'presigned_url': presigned_url})
 
 @app.route('/uploadFiles',methods=['POST'])
 def savingFiles():
@@ -370,20 +377,6 @@ def savingFiles():
 
     except:
        pass
-
-    # try:
-    #     print('im here')
-    #     file = request.files['file']
-
-    # # Enqueue the entire CSV data for processing
-    #     # queue.enqueue(process_and_upload_csv, file)
-    #     s3.put_object(Bucket="markjbs",
-    #                   Key="input.csv",
-    #                   Body=file)
-    #     print('done')
-    # except Exception as e:
-    #     print(e)
-    #     pass
 
     return jsonify({
         "status":200
