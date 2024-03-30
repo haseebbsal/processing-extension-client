@@ -5,9 +5,7 @@ import re
 from worker import conn
 from rq import Queue
 from rq.job import Job
-import os
 import boto3
-import requests
 from io import BytesIO
 
  
@@ -16,7 +14,7 @@ app = Flask(__name__)
 
 
 CORS(app)
-import os
+
 
 queue = Queue(connection=conn)
 
