@@ -468,7 +468,7 @@ def getting_result():
     
     return jsonify(response_object)
 
-@app.route('/getResult_files', methods=['POST'])
+@app.route('/getResult-files', methods=['POST'])
 def getting_result():
     id=request.json
     print(id)
