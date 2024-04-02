@@ -469,7 +469,7 @@ def getting_result():
     return jsonify(response_object)
 
 @app.route('/getResult-files', methods=['POST'])
-def getting_result():
+def get_result():
     id=request.json
     print(id)
     job = Job.fetch(id['job_key'], connection=conn)
