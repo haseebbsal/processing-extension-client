@@ -323,6 +323,68 @@ def checkagain():
 #     r=requests.post(presigned_url['url'],data=presigned_url['fields'],files=files)
 #     print(r.status_code)
 #     return jsonify({'presigned_url': presigned_url})
+def uploadBrand():
+    s3 = boto3.client('s3',
+                      aws_access_key_id=aws_access,
+                      aws_secret_access_key=aws_secret)
+    new_df=list(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/brands.csv',encoding='iso-8859-1',header=None)[0])
+    brand_lower_set = set(new_df)
+    brand_new_lower_set = set(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/brands1.csv',encoding='iso-8859-1',header=None)[0])
+    brand_lower_set=brand_lower_set.union(brand_new_lower_set)
+    brand_dataframe=pd.DataFrame(list(brand_lower_set))
+    csv_buffer=BytesIO()
+    brand_dataframe.to_csv(csv_buffer,index=False)
+    csv_buffer.seek(0)
+    s3.delete_object(
+        Bucket='markjbs',
+        Key='brands1.csv'
+    )
+    s3.put_object(Bucket="markjbs",
+                        Key="brands.csv",
+                        Body=csv_buffer)
+    return 'done'
+
+def uploadDrink():
+    s3 = boto3.client('s3',
+                      aws_access_key_id=aws_access,
+                      aws_secret_access_key=aws_secret)
+    new_df=list(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/drink_types.csv',encoding='iso-8859-1',header=None)[0])
+    brand_lower_set = set(new_df)
+    brand_new_lower_set = set(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/drink_types1.csv',encoding='iso-8859-1',header=None)[0])
+    brand_lower_set=brand_lower_set.union(brand_new_lower_set)
+    brand_dataframe=pd.DataFrame(list(brand_lower_set))
+    csv_buffer=BytesIO()
+    brand_dataframe.to_csv(csv_buffer,index=False)
+    csv_buffer.seek(0)
+    s3.delete_object(
+        Bucket='markjbs',
+        Key='drink_types1.csv'
+    )
+    s3.put_object(Bucket="markjbs",
+                        Key="drink_types.csv",
+                        Body=csv_buffer)
+    return 'done'
+
+@app.route('/uploadBrand',methods=['GET'])
+def uploadingBrand():
+    job = queue.enqueue(uploadBrand,job_timeout='1h')
+    id=job.get_id()
+    print('job id',id)
+    return jsonify({
+        'jobId':id,
+        'status':200
+    })
+
+@app.route('/uploadDrink',methods=['GET'])
+def uploadingDrink():
+    job = queue.enqueue(uploadDrink,job_timeout='1h')
+    id=job.get_id()
+    print('job id',id)
+    return jsonify({
+        'jobId':id,
+        'status':200
+    })
+    
 
 @app.route('/uploadFiles',methods=['POST'])
 def savingFiles():
@@ -330,7 +392,8 @@ def savingFiles():
                       aws_access_key_id=aws_access,
                       aws_secret_access_key=aws_secret)
     try:
-        brand_file=request.files['brand-file']
+        # brand_file=request.files['brand-file']
+        # job = queue.enqueue(uploadBrand,job_timeout='1h')
         # brand_file_path = 'static/random.csv'
         # brand_file.save(os.path.join(MYDIR, app.config['UPLOAD_FOLDER'], 'random.csv'))
         # brand_file.save(brand_file_path)
@@ -439,6 +502,24 @@ def getting_result():
 
 
     print(job.get_id())
+    
+    return jsonify(response_object)
+
+@app.route('/getResult_files', methods=['POST'])
+def getting_result():
+    id=request.json
+    print(id)
+    job = Job.fetch(id['job_key'], connection=conn)
+
+    response_object = {
+        "status": "success",
+        "data": {
+            "job_id": job.get_id(),
+            "job_status": job.get_status(),
+            "job_result": job.result,
+        },
+    }
+
     
     return jsonify(response_object)
 
