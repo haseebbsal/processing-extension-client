@@ -323,7 +323,7 @@ def testingg(column):
 def check():
     return jsonify('working')
 
-@app.route('/justt', methods=['GET'])
+@app.route('/fuck', methods=['GET'])
 def checkagainnnn():
     return jsonify('workingggg')
 
