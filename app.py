@@ -288,7 +288,7 @@ def testingg(column):
 def check():
     return jsonify('working')
 
-@app.route('/just', methods=['GET'])
+@app.route('/justt', methods=['GET'])
 def checkagain():
     return jsonify('workingggg')
 
