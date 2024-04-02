@@ -16,7 +16,7 @@ conn = redis.Redis(
 
 
 # Define the queues you want to listen on
-listen = ['default']
+listen = ['haseeb']
 
 if __name__ == '__main__':
     # Establish a connection with the Redis server
