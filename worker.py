@@ -4,8 +4,8 @@ import os
 
 # Define your Redis connection details
 redis_host = 'redis-14433.c256.us-east-1-2.ec2.cloud.redislabs.com'
-redis_port = 14433
-redis_password = 'yanpfAzAcVeMqSYH7DE7Hb2LTfKHLye7'
+redis_port = 12957
+redis_password = 'UbTbkzR2nhADpHzfW0girP7Jhe2jsRAQ'
 
 # Establish a Redis connection
 conn = redis.Redis(
