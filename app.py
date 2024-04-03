@@ -67,11 +67,11 @@ def uploadDrink():
 
 def testingg(column):
     
-    # drink_types_lower = set(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/drink_types.csv',encoding='iso-8859-1',header=None)[0])
+    drink_types_lower = set(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/drink_types.csv',encoding='iso-8859-1',header=None)[0])
     
 
-    # csv_file_path = 'https://markjbs.s3.us-west-2.amazonaws.com/brands.csv'
-    # brand_name_list=list(pd.read_csv(csv_file_path,encoding='iso-8859-1',header=None)[0])
+    csv_file_path = 'https://markjbs.s3.us-west-2.amazonaws.com/brands.csv'
+    brand_name_list=list(pd.read_csv(csv_file_path,encoding='iso-8859-1',header=None)[0])
 
     def extract_number(description):
         match = re.search(r'(\d+)-', description)
@@ -247,73 +247,73 @@ def testingg(column):
     
     df=pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/input.csv',encoding='iso-8859-1',dtype='object')
                 
-    # try:
-    #     type_array= df[f"{column}"]
-    #     new_type_array= []
-    #     new_brand_type=[]
-    #     new_number_type=[]
-    #     new_size_type=[]
-    #     new_package_size=[]
-    #     for i in range(len(type_array)):
+    try:
+        type_array= df[f"{column}"]
+        new_type_array= []
+        new_brand_type=[]
+        new_number_type=[]
+        new_size_type=[]
+        new_package_size=[]
+        for i in range(len(type_array)):
             
-    #         new_type_array.append(str(find_drink_types(str(type_array[i]))))
-    #         new_brand_type.append(str(find_brands(str(type_array[i]))))
-    #         new_number_type.append(str(extract_number(str(type_array[i]))))
-    #         new_size_type.append(str(find_volume_size(str(type_array[i]))))
-    #         new_package_size.append(str(find_package_size(str(type_array[i]))))
+            new_type_array.append(str(find_drink_types(str(type_array[i]))))
+            new_brand_type.append(str(find_brands(str(type_array[i]))))
+            new_number_type.append(str(extract_number(str(type_array[i]))))
+            new_size_type.append(str(find_volume_size(str(type_array[i]))))
+            new_package_size.append(str(find_package_size(str(type_array[i]))))
             
         
-    #     df['Type'] = new_type_array
-    #     df['Brand'] = new_brand_type
-    #     df['Number in case'] = new_number_type
-    #     df['Size'] = new_size_type
-    #     df['Package Size'] = new_package_size
-    #     def low(string):
-    #         return str(string).lower()
-    #     brand_supplier=pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/Brand-supplier.csv',dtype='object')
-    #     manufacturer_list=brand_supplier['Manufacturer']
-    #     manufacturer_to_insert=[]
-    #     brands_to_search=list(brand_supplier['Brand'].apply(low))
-    #     storage_of_brands_finished=[]
-    #     storage_of_manufacture_of_brands=[]
-    #     for i in new_brand_type:
-    #         longest_manufacturer=''
-    #         brand=str(i).lower()
-    #         imp_count=storage_of_brands_finished.count(brand)
-    #         if not (imp_count>0):
-    #             count=brands_to_search.count(brand)
-    #             if count>0:
-    #                 for j in range(count):
-    #                     position_of_brand=brands_to_search.index(brand)
-    #                     manufacturer=str(manufacturer_list[position_of_brand])
-    #                     print(manufacturer)
-    #                     if len(manufacturer)>len(longest_manufacturer):
-    #                         if manufacturer!='nan':
-    #                             longest_manufacturer=manufacturer
-    #                     brands_to_search[position_of_brand]=''
-    #             manufacturer_to_insert.append(longest_manufacturer)
-    #             if brand not in storage_of_brands_finished:
-    #                 storage_of_brands_finished.append(brand)
-    #                 storage_of_manufacture_of_brands.append(longest_manufacturer)
-    #         else:
-    #             imp_index=storage_of_brands_finished.index(brand)
-    #             manufacturer_to_insert.append(storage_of_manufacture_of_brands[imp_index])
-    #     df['Manufacturer']=manufacturer_to_insert
+        df['Type'] = new_type_array
+        df['Brand'] = new_brand_type
+        df['Number in case'] = new_number_type
+        df['Size'] = new_size_type
+        df['Package Size'] = new_package_size
+        def low(string):
+            return str(string).lower()
+        brand_supplier=pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/Brand-supplier.csv',dtype='object')
+        manufacturer_list=brand_supplier['Manufacturer']
+        manufacturer_to_insert=[]
+        brands_to_search=list(brand_supplier['Brand'].apply(low))
+        storage_of_brands_finished=[]
+        storage_of_manufacture_of_brands=[]
+        for i in new_brand_type:
+            longest_manufacturer=''
+            brand=str(i).lower()
+            imp_count=storage_of_brands_finished.count(brand)
+            if not (imp_count>0):
+                count=brands_to_search.count(brand)
+                if count>0:
+                    for j in range(count):
+                        position_of_brand=brands_to_search.index(brand)
+                        manufacturer=str(manufacturer_list[position_of_brand])
+                        print(manufacturer)
+                        if len(manufacturer)>len(longest_manufacturer):
+                            if manufacturer!='nan':
+                                longest_manufacturer=manufacturer
+                        brands_to_search[position_of_brand]=''
+                manufacturer_to_insert.append(longest_manufacturer)
+                if brand not in storage_of_brands_finished:
+                    storage_of_brands_finished.append(brand)
+                    storage_of_manufacture_of_brands.append(longest_manufacturer)
+            else:
+                imp_index=storage_of_brands_finished.index(brand)
+                manufacturer_to_insert.append(storage_of_manufacture_of_brands[imp_index])
+        df['Manufacturer']=manufacturer_to_insert
 
-    print('done')
+        print('done')
 
-    return {
-        "data":df.values.tolist(),
-        "columns":df.columns.tolist(),
-        "status":200
+        return {
+            "data":df.values.tolist(),
+            "columns":df.columns.tolist(),
+            "status":200
 
-    }
-    # except Exception as e:
-    #     print(e)
-    #     # print('error is here')
-    #     return {
-    #         "status":400
-    #     }
+        }
+    except Exception as e:
+        print(e)
+        # print('error is here')
+        return {
+            "status":400
+        }
 
 
 
@@ -438,7 +438,6 @@ def getting_result():
             "job_result": job.result,
         },
     }
-    # job.
 
     if(job.result):
 
