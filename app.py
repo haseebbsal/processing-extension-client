@@ -402,12 +402,11 @@ def getting_result():
                       aws_secret_access_key=aws_secret)
             output_dataframe=pd.DataFrame(actual_data,columns=job.result['columns'])
             csv_buffer=BytesIO()
-            output_dataframe.to_csv(csv_buffer,index=False)
+            output_dataframe.to_excel(csv_buffer,index=False)
             csv_buffer.seek(0)
             s3.put_object(Bucket="markjbs",
                         Key="output.xlsx",
                         Body=csv_buffer)
-            # output_dataframe.to_excel('static/output.xlsx',index=False)
 
 
 
@@ -457,5 +456,4 @@ def index():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
 
