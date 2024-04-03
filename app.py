@@ -330,7 +330,7 @@ def checkagainnnn():
 
 @app.route('/uploadBrand',methods=['GET'])
 def uploadingBrand():
-    job = queue.enqueue(uploadBrand,job_timeout='2h')
+    job = queue.enqueue(uploadBrand,job_timeout='5h')
     id=job.get_id()
     print('job id',id)
     return jsonify({
@@ -340,7 +340,7 @@ def uploadingBrand():
 
 @app.route('/uploadDrink',methods=['GET'])
 def uploadingDrink():
-    job = queue.enqueue(uploadDrink,job_timeout='2h')
+    job = queue.enqueue(uploadDrink,job_timeout='5h')
     id=job.get_id()
     print('job id',id)
     return jsonify({
@@ -356,7 +356,7 @@ def savingFiles():
                       aws_secret_access_key=aws_secret)
     try:
         # brand_file=request.files['brand-file']
-        # job = queue.enqueue(uploadBrand,job_timeout='2h')
+        # job = queue.enqueue(uploadBrand,job_timeout='5h')
         # brand_file_path = 'static/random.csv'
         # brand_file.save(os.path.join(MYDIR, app.config['UPLOAD_FOLDER'], 'random.csv'))
         # brand_file.save(brand_file_path)
@@ -415,7 +415,7 @@ def savingFiles():
 def create_and_save_excel():
 
     column = request.form['column']
-    job = queue.enqueue(testingg,column,job_timeout='2h')
+    job = queue.enqueue(testingg,column,job_timeout='5h')
     id=job.get_id()
     print('job id',id)
     return jsonify({
