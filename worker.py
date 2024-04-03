@@ -3,10 +3,9 @@ from rq import Worker, Queue, Connection
 import os
 
 # Define your Redis connection details
-redis_host = 'redis-14433.c256.us-east-1-2.ec2.cloud.redislabs.com'
+redis_host = 'redis-12957.c60.us-west-1-2.ec2.cloud.redislabs.com'
 redis_port = 12957
 redis_password = 'UbTbkzR2nhADpHzfW0girP7Jhe2jsRAQ'
-
 # Establish a Redis connection
 conn = redis.Redis(
     host=redis_host,
