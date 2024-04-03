@@ -245,7 +245,7 @@ def testingg(column):
     # #     # Columns Extraction
             
     
-    df=pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/input.csv',encoding='iso-8859-1',header=None)[0]
+    df=pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/input.csv',encoding='iso-8859-1',header=None,dtype='object')
                 
     try:
         type_array= df[f"{column}"]
