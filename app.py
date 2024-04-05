@@ -301,6 +301,16 @@ def testingg(column):
         df['Manufacturer']=manufacturer_to_insert
 
         print('done')
+        s3 = boto3.client('s3',
+                      aws_access_key_id=aws_access,
+                      aws_secret_access_key=aws_secret)
+            # output_dataframe=pd.DataFrame(actual_data,columns=job.result['columns'])
+        csv_buffer=BytesIO()
+        df.to_excel(csv_buffer,index=False)
+        csv_buffer.seek(0)
+        s3.put_object(Bucket="markjbs",
+                    Key="output.xlsx",
+                    Body=csv_buffer)
 
         return {
             "data":df.values.tolist(),
@@ -314,9 +324,6 @@ def testingg(column):
         return {
             "status":400
         }
-
-
-
 
 
 @app.route('/get', methods=['GET'])
@@ -376,39 +383,6 @@ def getting_result():
             "job_result": job.result,
         },
     }
-
-    if(job.result):
-
-        if job.result['status']==200:
-            data=job.result['data']
-            actual_data=[]
-            for i in data:
-                filter=[]
-                for j in i:
-                    
-                    filter.append(str(j))
-                actual_data.append(filter)
-
-            response_object = {
-                "status": "success",
-                "data": {
-                    "job_id": job.get_id(),
-                    "job_status": job.get_status(),
-                    "job_result": actual_data,
-                },
-            }
-            s3 = boto3.client('s3',
-                      aws_access_key_id=aws_access,
-                      aws_secret_access_key=aws_secret)
-            output_dataframe=pd.DataFrame(actual_data,columns=job.result['columns'])
-            csv_buffer=BytesIO()
-            output_dataframe.to_excel(csv_buffer,index=False)
-            csv_buffer.seek(0)
-            s3.put_object(Bucket="markjbs",
-                        Key="output.xlsx",
-                        Body=csv_buffer)
-
-
 
     print(job.get_id())
     
