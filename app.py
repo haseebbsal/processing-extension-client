@@ -313,8 +313,7 @@ def testingg(column):
                     Body=csv_buffer)
 
         return {
-            "data":df.values.tolist(),
-            "columns":df.columns.tolist(),
+            "data":'done',
             "status":200
 
         }
