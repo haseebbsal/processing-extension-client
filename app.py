@@ -30,7 +30,8 @@ def uploadManu():
     new_df_data=new_df.values.tolist()
     brand_new_lower_set = pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/Brand-supplier1.csv',encoding='iso-8859-1',dtype='object').values.tolist()
     for i in brand_new_lower_set:
-        new_df_data.append(i)
+        if(i not in new_df_data):
+            new_df_data.append(i)
     # brand_lower_set=brand_lower_set.union(brand_new_lower_set)
     brand_dataframe=pd.DataFrame(new_df_data,columns=new_df.columns)
     csv_buffer=BytesIO()
