@@ -22,6 +22,26 @@ bucket=os.getenv("S3_BUCKET")
 
 queue = Queue(connection=conn)
 
+def uploadManu():
+    s3 = boto3.client('s3',
+                      aws_access_key_id=aws_access,
+                      aws_secret_access_key=aws_secret)
+    new_df=list(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/Brand-supplier.csv',encoding='iso-8859-1',header=None)[0])
+    brand_lower_set = set(new_df)
+    brand_new_lower_set = set(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/Brand-supplier1.csv',encoding='iso-8859-1',header=None)[0])
+    brand_lower_set=brand_lower_set.union(brand_new_lower_set)
+    brand_dataframe=pd.DataFrame(list(brand_lower_set))
+    csv_buffer=BytesIO()
+    brand_dataframe.to_csv(csv_buffer,index=False)
+    csv_buffer.seek(0)
+    s3.delete_object(
+        Bucket='markjbs',
+        Key='Brand-supplier1.csv'
+    )
+    s3.put_object(Bucket="markjbs",
+                        Key="Brand-supplier.csv",
+                        Body=csv_buffer)
+    return 'done'
 
 def uploadBrand():
     s3 = boto3.client('s3',
@@ -332,6 +352,17 @@ def check():
 @app.route('/fuck', methods=['GET'])
 def checkagainnnn():
     return jsonify('workingggg')
+
+
+@app.route('/uploadManu',methods=['GET'])
+def uploadingBrand():
+    job = queue.enqueue(uploadManu,job_timeout='5h')
+    id=job.get_id()
+    print('job id',id)
+    return jsonify({
+        'jobId':id,
+        'status':200
+    })
 
 
 @app.route('/uploadBrand',methods=['GET'])
