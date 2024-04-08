@@ -355,7 +355,7 @@ def checkagainnnn():
 
 
 @app.route('/uploadManu',methods=['GET'])
-def uploadingBrand():
+def uploadingManuFact():
     job = queue.enqueue(uploadManu,job_timeout='5h')
     id=job.get_id()
     print('job id',id)
