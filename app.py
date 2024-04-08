@@ -28,7 +28,7 @@ def uploadManu():
                       aws_secret_access_key=aws_secret)
     new_df=pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/Brand-supplier.csv',encoding='iso-8859-1',dtype='object')
     new_df_data=new_df.values.tolist()
-    brand_new_lower_set = pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/Brand-supplier1.csv',encoding='iso-8859-1',dtype='object').values.tolist()
+    brand_new_lower_set = pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/Brand-supplier1.csv',encoding='iso-8859-1',dtype='object').dropna(how='all').reset_index(drop=True).values.tolist()
     for i in brand_new_lower_set:
         if(i not in new_df_data):
             new_df_data.append(i)
