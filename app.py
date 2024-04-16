@@ -50,9 +50,9 @@ def uploadBrand():
     s3 = boto3.client('s3',
                       aws_access_key_id=aws_access,
                       aws_secret_access_key=aws_secret)
-    new_df=list(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/brands.csv',encoding='ISO-8859-1',header=None)[0])
+    new_df=list(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/brands.csv',header=None)[0])
     brand_lower_set = set(new_df)
-    brand_new_lower_set = set(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/brands1.csv',encoding='ISO-8859-1',header=None).dropna(how='all').reset_index(drop=True)[0])
+    brand_new_lower_set = set(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/brands1.csv',header=None).dropna(how='all').reset_index(drop=True)[0])
     brand_lower_set=brand_lower_set.union(brand_new_lower_set)
     brand_dataframe=pd.DataFrame(list(brand_lower_set))
     csv_buffer=BytesIO()
