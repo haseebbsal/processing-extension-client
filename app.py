@@ -26,9 +26,9 @@ def uploadManu():
     s3 = boto3.client('s3',
                       aws_access_key_id=aws_access,
                       aws_secret_access_key=aws_secret)
-    new_df=pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/Brand-supplier.csv',encoding='iso-8859-1',dtype='object')
+    new_df=pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/Brand-supplier.csv',encoding='ISO-8859-1',dtype='object')
     new_df_data=new_df.values.tolist()
-    brand_new_lower_set = pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/Brand-supplier1.csv',encoding='iso-8859-1',dtype='object').dropna(how='all').reset_index(drop=True).values.tolist()
+    brand_new_lower_set = pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/Brand-supplier1.csv',encoding='ISO-8859-1',dtype='object').dropna(how='all').reset_index(drop=True).values.tolist()
     for i in brand_new_lower_set:
         if(i not in new_df_data):
             new_df_data.append(i)
@@ -50,9 +50,9 @@ def uploadBrand():
     s3 = boto3.client('s3',
                       aws_access_key_id=aws_access,
                       aws_secret_access_key=aws_secret)
-    new_df=list(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/brands.csv',encoding='iso-8859-1',header=None)[0])
+    new_df=list(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/brands.csv',encoding='ISO-8859-1',header=None)[0])
     brand_lower_set = set(new_df)
-    brand_new_lower_set = set(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/brands1.csv',encoding='iso-8859-1',header=None).dropna(how='all').reset_index(drop=True)[0])
+    brand_new_lower_set = set(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/brands1.csv',encoding='ISO-8859-1',header=None).dropna(how='all').reset_index(drop=True)[0])
     brand_lower_set=brand_lower_set.union(brand_new_lower_set)
     brand_dataframe=pd.DataFrame(list(brand_lower_set))
     csv_buffer=BytesIO()
@@ -71,9 +71,9 @@ def uploadDrink():
     s3 = boto3.client('s3',
                       aws_access_key_id=aws_access,
                       aws_secret_access_key=aws_secret)
-    new_df=list(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/drink_types.csv',encoding='iso-8859-1',header=None)[0])
+    new_df=list(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/drink_types.csv',encoding='ISO-8859-1',header=None)[0])
     brand_lower_set = set(new_df)
-    brand_new_lower_set = set(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/drink_types1.csv',encoding='iso-8859-1',header=None).dropna(how='all').reset_index(drop=True)[0])
+    brand_new_lower_set = set(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/drink_types1.csv',encoding='ISO-8859-1',header=None).dropna(how='all').reset_index(drop=True)[0])
     brand_lower_set=brand_lower_set.union(brand_new_lower_set)
     brand_dataframe=pd.DataFrame(list(brand_lower_set))
     csv_buffer=BytesIO()
@@ -90,11 +90,11 @@ def uploadDrink():
 
 def testingg(column):
     
-    drink_types_lower = set(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/drink_types.csv',encoding='iso-8859-1',header=None)[0])
+    drink_types_lower = set(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/drink_types.csv',encoding='ISO-8859-1',header=None)[0])
     
 
     csv_file_path = 'https://markjbs.s3.us-west-2.amazonaws.com/brands.csv'
-    brand_name_list=list(pd.read_csv(csv_file_path,encoding='iso-8859-1',header=None)[0])
+    brand_name_list=list(pd.read_csv(csv_file_path,encoding='ISO-8859-1',header=None)[0])
 
     def extract_number(description):
         match = re.search(r'(\d+)-', description)
@@ -268,7 +268,7 @@ def testingg(column):
     # #     # Columns Extraction
             
     
-    df=pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/input.csv',encoding='iso-8859-1',dtype='object')
+    df=pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/input.csv',encoding='ISO-8859-1',dtype='object')
                 
     try:
         type_array= df[f"{column}"]
@@ -293,7 +293,7 @@ def testingg(column):
         df['Package Size'] = new_package_size
         def low(string):
             return str(string).lower()
-        brand_supplier=pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/Brand-supplier.csv',encoding='iso-8859-1',dtype='object')
+        brand_supplier=pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/Brand-supplier.csv',encoding='ISO-8859-1',dtype='object')
         manufacturer_list=brand_supplier['Manufacturer']
         manufacturer_to_insert=[]
         brands_to_search=list(brand_supplier['Brand'].apply(low))
