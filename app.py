@@ -58,10 +58,10 @@ def uploadBrand():
     csv_buffer=BytesIO()
     brand_dataframe.to_csv(csv_buffer,index=False)
     csv_buffer.seek(0)
-    # s3.delete_object(
-    #     Bucket='markjbs',
-    #     Key='brands1.csv'
-    # )
+    s3.delete_object(
+        Bucket='markjbs',
+        Key='brands1.csv'
+    )
     s3.put_object(Bucket="markjbs",
                         Key="brands.csv",
                         Body=csv_buffer)
