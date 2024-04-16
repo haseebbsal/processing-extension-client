@@ -52,7 +52,7 @@ def uploadBrand():
                       aws_secret_access_key=aws_secret)
     new_df=list(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/brands.csv',encoding='MacRoman',header=None)[0])
     brand_lower_set = set(new_df)
-    brand_new_lower_set = set(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/brands1.csv',encoding='MacRoman',header=None)[0]).dropna(how='all').reset_index(drop=True).values.tolist()
+    brand_new_lower_set = set(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/brands1.csv',encoding='MacRoman',header=None).dropna(how='all').reset_index(drop=True)[0])
     brand_lower_set=brand_lower_set.union(brand_new_lower_set)
     brand_dataframe=pd.DataFrame(list(brand_lower_set))
     csv_buffer=BytesIO()
@@ -73,7 +73,7 @@ def uploadDrink():
                       aws_secret_access_key=aws_secret)
     new_df=list(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/drink_types.csv',encoding='MacRoman',header=None)[0])
     brand_lower_set = set(new_df)
-    brand_new_lower_set = set(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/drink_types1.csv',encoding='MacRoman',header=None)[0]).dropna(how='all').reset_index(drop=True).values.tolist()
+    brand_new_lower_set = set(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/drink_types1.csv',encoding='MacRoman',header=None).dropna(how='all').reset_index(drop=True)[0])
     brand_lower_set=brand_lower_set.union(brand_new_lower_set)
     brand_dataframe=pd.DataFrame(list(brand_lower_set))
     csv_buffer=BytesIO()
@@ -293,7 +293,7 @@ def testingg(column):
         df['Package Size'] = new_package_size
         def low(string):
             return str(string).lower()
-        brand_supplier=pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/Brand-supplier.csv',dtype='object')
+        brand_supplier=pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/Brand-supplier.csv',encoding='MacRoman',dtype='object')
         manufacturer_list=brand_supplier['Manufacturer']
         manufacturer_to_insert=[]
         brands_to_search=list(brand_supplier['Brand'].apply(low))
