@@ -74,7 +74,7 @@ def uploadBrand():
     s3 = boto3.client('s3',
                       aws_access_key_id=aws_access,
                       aws_secret_access_key=aws_secret)
-    new_df=list(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/brands.csv')[0])
+    new_df=list(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/brands.csv')['0'])
     brand_lower_set = set(new_df)
     brand_new_lower_set = set(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/brands1.csv',header=None).dropna(how='all').reset_index(drop=True)[0])
     brand_lower_set=brand_lower_set.union(brand_new_lower_set)
@@ -95,7 +95,7 @@ def uploadDrink():
     s3 = boto3.client('s3',
                       aws_access_key_id=aws_access,
                       aws_secret_access_key=aws_secret)
-    new_df=list(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/drink_types.csv')[0])
+    new_df=list(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/drink_types.csv')['0'])
     brand_lower_set = set(new_df)
     brand_new_lower_set = set(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/drink_types1.csv',header=None).dropna(how='all').reset_index(drop=True)[0])
     brand_lower_set=brand_lower_set.union(brand_new_lower_set)
@@ -116,9 +116,9 @@ def testingg(column):
     packageDF=pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/package_size_master.csv')
     package_size=packageDF['Package Size'].to_list()
     numberincase=packageDF['Number in Case'].to_list()
-    drink_types_lower = set(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/drink_types.csv')[0])
+    drink_types_lower = set(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/drink_types.csv')['0'])
     csv_file_path = 'https://markjbs.s3.us-west-2.amazonaws.com/brands.csv'
-    brand_name_list=list(pd.read_csv(csv_file_path)[0])
+    brand_name_list=list(pd.read_csv(csv_file_path)['0'])
     new_type_array= []
     new_brand_type=[]
     new_number_type=[]
