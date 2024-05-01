@@ -197,6 +197,7 @@ def testingg(column):
             if package.lower() in description.lower().split():
                 new_number_type.append(numberincase[index])
                 packageToReturn=package
+                break
         
         if packageToReturn=='':
             new_number_type.append(0)
