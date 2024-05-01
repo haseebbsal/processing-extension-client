@@ -197,7 +197,9 @@ def testingg(column):
             if package.lower() in description.lower().split():
                 new_number_type.append(numberincase[index])
                 packageToReturn=package
-
+        
+        if packageToReturn=='':
+            new_number_type.append(0)
         return packageToReturn
         # patterns = [
         #     r'\b(\d+(\.\d+)?(L|l|ltr|ltrs|liter|liters))\b',
