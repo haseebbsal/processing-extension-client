@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "html-to-docx": "^1.8.0",
+    "html-to-pdf": "^0.1.11",
+    "puppeteer": "^22.7.1"
+  }
+}

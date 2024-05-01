@@ -22,6 +22,30 @@ bucket=os.getenv("S3_BUCKET")
 
 queue = Queue(connection=conn)
 
+def uploadPackage():
+    s3 = boto3.client('s3',
+                      aws_access_key_id=aws_access,
+                      aws_secret_access_key=aws_secret)
+    new_df=pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/package_size_master.csv')
+    new_df_data=new_df.values.tolist()
+    brand_new_lower_set = pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/package_size_master1.csv',dtype='object').dropna(how='all').reset_index(drop=True).values.tolist()
+    for i in brand_new_lower_set:
+        if(i not in new_df_data):
+            new_df_data.append(i)
+    # brand_lower_set=brand_lower_set.union(brand_new_lower_set)
+    brand_dataframe=pd.DataFrame(new_df_data,columns=new_df.columns)
+    csv_buffer=BytesIO()
+    brand_dataframe.to_csv(csv_buffer,index=False)
+    csv_buffer.seek(0)
+    s3.delete_object(
+        Bucket='markjbs',
+        Key='package_size_master1.csv'
+    )
+    s3.put_object(Bucket="markjbs",
+                        Key="package_size_master.csv",
+                        Body=csv_buffer)
+    return 'done'
+
 def uploadManu():
     s3 = boto3.client('s3',
                       aws_access_key_id=aws_access,
@@ -50,7 +74,7 @@ def uploadBrand():
     s3 = boto3.client('s3',
                       aws_access_key_id=aws_access,
                       aws_secret_access_key=aws_secret)
-    new_df=list(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/brands.csv',header=None)[0])
+    new_df=list(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/brands.csv')[0])
     brand_lower_set = set(new_df)
     brand_new_lower_set = set(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/brands1.csv',header=None).dropna(how='all').reset_index(drop=True)[0])
     brand_lower_set=brand_lower_set.union(brand_new_lower_set)
@@ -71,7 +95,7 @@ def uploadDrink():
     s3 = boto3.client('s3',
                       aws_access_key_id=aws_access,
                       aws_secret_access_key=aws_secret)
-    new_df=list(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/drink_types.csv',header=None)[0])
+    new_df=list(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/drink_types.csv')[0])
     brand_lower_set = set(new_df)
     brand_new_lower_set = set(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/drink_types1.csv',header=None).dropna(how='all').reset_index(drop=True)[0])
     brand_lower_set=brand_lower_set.union(brand_new_lower_set)
@@ -89,25 +113,30 @@ def uploadDrink():
     return 'done'
 
 def testingg(column):
-    
-    drink_types_lower = set(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/drink_types.csv',header=None)[0])
-    
-
+    packageDF=pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/package_size_master.csv')
+    package_size=packageDF['Package Size'].to_list()
+    numberincase=packageDF['Number in Case'].to_list()
+    drink_types_lower = set(pd.read_csv('https://markjbs.s3.us-west-2.amazonaws.com/drink_types.csv')[0])
     csv_file_path = 'https://markjbs.s3.us-west-2.amazonaws.com/brands.csv'
-    brand_name_list=list(pd.read_csv(csv_file_path,header=None)[0])
+    brand_name_list=list(pd.read_csv(csv_file_path)[0])
+    new_type_array= []
+    new_brand_type=[]
+    new_number_type=[]
+    new_size_type=[]
+    new_package_size=[]
 
-    def extract_number(description):
-        match = re.search(r'(\d+)-', description)
-        if match:
-            return int(match.group(1))
+    # def extract_number(description):
+    #     match = re.search(r'(\d+)-', description)
+    #     if match:
+    #         return int(match.group(1))
         
-        # Default Rules as mentioned in the documentation
-        if '750' in description:
-            return 12  
-        elif 'LTR' or 'CS' in description:
-            return 9   
+    #     # Default Rules as mentioned in the documentation
+    #     if '750' in description:
+    #         return 12  
+    #     elif 'LTR' or 'CS' in description:
+    #         return 9   
         
-        return None  
+    #     return None  
 
 
 
@@ -163,106 +192,113 @@ def testingg(column):
 
     # Function for Package Size
     def find_package_size(description):
-        patterns = [
-            r'\b(\d+(\.\d+)?(L|l|ltr|ltrs|liter|liters))\b',
-            r'\b(\d+(\.\d+)?(ML|ml))\b',
-            r'\b(\d+(\.\d+)?(OZ|oz))\b',
-            r'\b(\d+(\.\d+)?(GAL|gal))\b',
-            r'\b(Half\s*Barrel|Quarter\s*Barrel|Eighth\s*Barrel)\b',
-            r'\b(\d+(\.\d+)?-\d+(\.\d+)?(/\w+)?)\b', 
-            r'\b(\d+(\.\d+)?(\s*LTR|liter|L))\b',  
-            r'\b(\d+(\.\d+)?(\s*OZ|oz))\b',  
-            r'\b(\d+(\.\d+)?(\s*BTL|BTLs))\b',  
-            r'\b(\d+(\.\d+)?(\s*LTR|liter|L)\s*KEG)\b', 
-            r'\b(\d+(\.\d+)?\s*(LTR|liter|L)\s*(KEG))\b',  
-            r'\b(\d+(\.\d+)?\s*(LTR|liter|L)\s*(BTLS|BTLs)/CS)\b',  
-            r'\b(\d+(\.\d+)?(FZ|fz))\b',  
-            r'\b(\d+(\.\d+)?\s*LTR/BTL)\b',  
-            r'\b(\d+(\.\d+)?\s*LTR/CS)\b',  
-            r'\b(\d+(\.\d+)?\s*LTRS/CS)\b',  
-            r'\b(\d+(\.\d+)?\s*ML/BTL)\b',  
-            r'\b(\d+(\.\d+)?\s*ML/CS)\b',  
-            r'\b(\d+(\.\d+)?\s*OZ/BTL)\b',  
-            r'\b(\d+(\.\d+)?\s*OZ/CS)\b',  
-            r'\b(\d+(\.\d+)?\s*L/BTL)\b',  
-            r'\b(\d+(\.\d+)?\s*L/CS)\b',  
-            r'\b(\d+(\.\d+)?\s*ML/BTL)\b', 
-            r'\b(\d+(\.\d+)?\s*ML/CS)\b',  
-            r'\b(\d+(\.\d+)?\s*LTR)\b', 
-            r'\b(\d+(\.\d+)?\s*ML)\b',  
-            r'\b(\d+(\.\d+)?(/\d+(\.\d+)?)?\s*KEG)\b',  
-            r'\b(\d+(\.\d+)?\s*CS)\b',
-            r'\b(\d+(\.\d+)?\s*PKS/CS)\b', 
-            r'\b(\d+(\.\d+)?\s*CS)\b',  
-            r'\b(\d+(\.\d+)?\s*BTL)\b',  
-            r'\b(\d+(\.\d+)?\s*LTR/CS)\b',  
-            r'\b(\d+(\.\d+)?\s*BTL/CS)\b',  
-            r'\b(\d+(\.\d+)?/\d+(\.\d+)?\s*(LTR|L))\b',  
-            r'\b(\d+(\.\d+)?\s*BBL)\b',  
-            r'\b(\d+(\.\d+)?/\d+(\.\d+)?\s*CS)\b',  
-            r'\b(\d+(\.\d+)?\s*(BTL|FZ))\b',
-            r'\b(\d+(\.\d+)?(/\d+(\.\d+)?))\b',
-        ]
+        packageToReturn=''
+        for index,package in enumerate(package_size):
+            if package.lower() in description.lower().split():
+                new_number_type.append(numberincase[index])
+                packageToReturn=package
+
+        return packageToReturn
+        # patterns = [
+        #     r'\b(\d+(\.\d+)?(L|l|ltr|ltrs|liter|liters))\b',
+        #     r'\b(\d+(\.\d+)?(ML|ml))\b',
+        #     r'\b(\d+(\.\d+)?(OZ|oz))\b',
+        #     r'\b(\d+(\.\d+)?(GAL|gal))\b',
+        #     r'\b(Half\s*Barrel|Quarter\s*Barrel|Eighth\s*Barrel)\b',
+        #     r'\b(\d+(\.\d+)?-\d+(\.\d+)?(/\w+)?)\b', 
+        #     r'\b(\d+(\.\d+)?(\s*LTR|liter|L))\b',  
+        #     r'\b(\d+(\.\d+)?(\s*OZ|oz))\b',  
+        #     r'\b(\d+(\.\d+)?(\s*BTL|BTLs))\b',  
+        #     r'\b(\d+(\.\d+)?(\s*LTR|liter|L)\s*KEG)\b', 
+        #     r'\b(\d+(\.\d+)?\s*(LTR|liter|L)\s*(KEG))\b',  
+        #     r'\b(\d+(\.\d+)?\s*(LTR|liter|L)\s*(BTLS|BTLs)/CS)\b',  
+        #     r'\b(\d+(\.\d+)?(FZ|fz))\b',  
+        #     r'\b(\d+(\.\d+)?\s*LTR/BTL)\b',  
+        #     r'\b(\d+(\.\d+)?\s*LTR/CS)\b',  
+        #     r'\b(\d+(\.\d+)?\s*LTRS/CS)\b',  
+        #     r'\b(\d+(\.\d+)?\s*ML/BTL)\b',  
+        #     r'\b(\d+(\.\d+)?\s*ML/CS)\b',  
+        #     r'\b(\d+(\.\d+)?\s*OZ/BTL)\b',  
+        #     r'\b(\d+(\.\d+)?\s*OZ/CS)\b',  
+        #     r'\b(\d+(\.\d+)?\s*L/BTL)\b',  
+        #     r'\b(\d+(\.\d+)?\s*L/CS)\b',  
+        #     r'\b(\d+(\.\d+)?\s*ML/BTL)\b', 
+        #     r'\b(\d+(\.\d+)?\s*ML/CS)\b',  
+        #     r'\b(\d+(\.\d+)?\s*LTR)\b', 
+        #     r'\b(\d+(\.\d+)?\s*ML)\b',  
+        #     r'\b(\d+(\.\d+)?(/\d+(\.\d+)?)?\s*KEG)\b',  
+        #     r'\b(\d+(\.\d+)?\s*CS)\b',
+        #     r'\b(\d+(\.\d+)?\s*PKS/CS)\b', 
+        #     r'\b(\d+(\.\d+)?\s*CS)\b',  
+        #     r'\b(\d+(\.\d+)?\s*BTL)\b',  
+        #     r'\b(\d+(\.\d+)?\s*LTR/CS)\b',  
+        #     r'\b(\d+(\.\d+)?\s*BTL/CS)\b',  
+        #     r'\b(\d+(\.\d+)?/\d+(\.\d+)?\s*(LTR|L))\b',  
+        #     r'\b(\d+(\.\d+)?\s*BBL)\b',  
+        #     r'\b(\d+(\.\d+)?/\d+(\.\d+)?\s*CS)\b',  
+        #     r'\b(\d+(\.\d+)?\s*(BTL|FZ))\b',
+        #     r'\b(\d+(\.\d+)?(/\d+(\.\d+)?))\b',
+        # ]
         
         
-        combined_pattern = '|'.join(patterns)
+        # combined_pattern = '|'.join(patterns)
         
 
-        sizes_pattern = re.compile(combined_pattern, re.IGNORECASE)
-        match = sizes_pattern.search(description)
-        if match:
-            return match.group().upper() 
-        else:
-            # Default rules as defined in the documentation
-            if '750' in description:
-                return '750'  
-            elif 'LTR' in description:
-                return 'LTR'  
-            else:
-                return ''  
+        # sizes_pattern = re.compile(combined_pattern, re.IGNORECASE)
+        # match = sizes_pattern.search(description)
+        # if match:
+        #     return match.group().upper() 
+        # else:
+        #     # Default rules as defined in the documentation
+        #     if '750' in description:
+        #         return '750'  
+        #     elif 'LTR' in description:
+        #         return 'LTR'  
+        #     else:
+        #         return ''  
 
 
 
     # Function for Size
-    def find_volume_size(description):
-        # Define regular expression patterns to match different size formats
-        patterns = [
-            r'\b(\d+(\.\d+)?(L|l|ltr|ltrs|liter|liters))\b',
-            r'\b(\d+(\.\d+)?(ML|ml))\b',
-            r'\b(\d+(\.\d+)?(OZ|oz))\b',
-            r'\b(\d+(\.\d+)?(GAL|gal))\b',
-            r'\b(Half\s*Barrel|Quarter\s*Barrel|Eighth\s*Barrel)\b',
-            r'\b(\d+(\.\d+)?(/\d+(\.\d+)?))\b',  
-            r'\b(\d+(\.\d+)?\s*(LTR|liter|L))\b',  
-            r'\b(\d+(\.\d+)?\s*(OZ|oz))\b',  
-            r'\b(\d+(\.\d+)?\s*(BTL|BTLs))\b',  
-            r'\b(\d+(\.\d+)?\s*(LTR|liter|L)\s*KEG)\b',  
-            r'\b(\d+(\.\d+)?\s*(LTR|L))\b',  
-            r'\b(\d+(\.\d+)?\s*(ML|ml))\b',  
-            r'\b(\d+(\.\d+)?\s*(GAL|gal))\b',  
-            r'\b(\d+(\.\d+)?\s*(BBL))\b',  
-            r'\b(\d+(\.\d+)?(FZ|fz))\b',
-            r'\b(\d+(\.\d+)?(/CS|/cs))\b',
-            r'\b(\d+(\.\d+)?(/BTL|/btl))\b',
-            r'\b(\d+(\.\d+))\b',
-        ]
+    # def find_volume_size(description):
+    #     # Define regular expression patterns to match different size formats
+    #     patterns = [
+    #         r'\b(\d+(\.\d+)?(L|l|ltr|ltrs|liter|liters))\b',
+    #         r'\b(\d+(\.\d+)?(ML|ml))\b',
+    #         r'\b(\d+(\.\d+)?(OZ|oz))\b',
+    #         r'\b(\d+(\.\d+)?(GAL|gal))\b',
+    #         r'\b(Half\s*Barrel|Quarter\s*Barrel|Eighth\s*Barrel)\b',
+    #         r'\b(\d+(\.\d+)?(/\d+(\.\d+)?))\b',  
+    #         r'\b(\d+(\.\d+)?\s*(LTR|liter|L))\b',  
+    #         r'\b(\d+(\.\d+)?\s*(OZ|oz))\b',  
+    #         r'\b(\d+(\.\d+)?\s*(BTL|BTLs))\b',  
+    #         r'\b(\d+(\.\d+)?\s*(LTR|liter|L)\s*KEG)\b',  
+    #         r'\b(\d+(\.\d+)?\s*(LTR|L))\b',  
+    #         r'\b(\d+(\.\d+)?\s*(ML|ml))\b',  
+    #         r'\b(\d+(\.\d+)?\s*(GAL|gal))\b',  
+    #         r'\b(\d+(\.\d+)?\s*(BBL))\b',  
+    #         r'\b(\d+(\.\d+)?(FZ|fz))\b',
+    #         r'\b(\d+(\.\d+)?(/CS|/cs))\b',
+    #         r'\b(\d+(\.\d+)?(/BTL|/btl))\b',
+    #         r'\b(\d+(\.\d+))\b',
+    #     ]
         
         
-        combined_pattern = '|'.join(patterns)
+    #     combined_pattern = '|'.join(patterns)
         
         
-        sizes_pattern = re.compile(combined_pattern, re.IGNORECASE)
+    #     sizes_pattern = re.compile(combined_pattern, re.IGNORECASE)
 
         
-        match = sizes_pattern.search(description)
-        if match:
-            return match.group().upper()  
-        else:
-            # Default pattern as mentioned in the documentation
-            if 'CS' or ' C '  in description:
-                return 'CS' 
-            else:
-                return ''  
+    #     match = sizes_pattern.search(description)
+    #     if match:
+    #         return match.group().upper()  
+    #     else:
+    #         # Default pattern as mentioned in the documentation
+    #         if 'CS' or ' C '  in description:
+    #             return 'CS' 
+    #         else:
+    #             return ''  
 
 
     # #     # Columns Extraction
@@ -272,24 +308,19 @@ def testingg(column):
                 
     try:
         type_array= df[f"{column}"]
-        new_type_array= []
-        new_brand_type=[]
-        new_number_type=[]
-        new_size_type=[]
-        new_package_size=[]
         for i in range(len(type_array)):
             
             new_type_array.append(str(find_drink_types(str(type_array[i]))))
             new_brand_type.append(str(find_brands(str(type_array[i]))))
-            new_number_type.append(str(extract_number(str(type_array[i]))))
-            new_size_type.append(str(find_volume_size(str(type_array[i]))))
+            # new_number_type.append(str(extract_number(str(type_array[i]))))
+            # new_size_type.append(str(find_volume_size(str(type_array[i]))))
             new_package_size.append(str(find_package_size(str(type_array[i]))))
             
         
         df['Type'] = new_type_array
         df['Brand'] = new_brand_type
         df['Number in case'] = new_number_type
-        df['Size'] = new_size_type
+        df['Size'] = new_package_size
         df['Package Size'] = new_package_size
         def low(string):
             return str(string).lower()
@@ -358,6 +389,17 @@ def checkagainnnn():
 
 
 @app.route('/uploadManu',methods=['GET'])
+def uploadingManuFact():
+    job = queue.enqueue(uploadManu,job_timeout='5h')
+    id=job.get_id()
+    print('job id',id)
+    return jsonify({
+        'jobId':id,
+        'status':200
+    })
+
+
+@app.route('/uploadPackage',methods=['GET'])
 def uploadingManuFact():
     job = queue.enqueue(uploadManu,job_timeout='5h')
     id=job.get_id()
