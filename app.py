@@ -400,7 +400,7 @@ def uploadingManuFact():
 
 
 @app.route('/uploadPackage',methods=['GET'])
-def uploadingManuFact():
+def uploadingPackageFact():
     job = queue.enqueue(uploadManu,job_timeout='5h')
     id=job.get_id()
     print('job id',id)
