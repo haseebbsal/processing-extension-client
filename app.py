@@ -401,7 +401,7 @@ def uploadingManuFact():
 
 @app.route('/uploadPackage',methods=['GET'])
 def uploadingPackageFact():
-    job = queue.enqueue(uploadManu,job_timeout='5h')
+    job = queue.enqueue(uploadPackage,job_timeout='5h')
     id=job.get_id()
     print('job id',id)
     return jsonify({
